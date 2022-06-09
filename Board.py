@@ -1,13 +1,34 @@
-class View:
+class Player:
+    def __init__(self, name, marble_color):
+        self.name = name
+        self.marble_color = marble_color
+        self.marble_count = 8
+        self.captured = 0
+
+    def get_name(self):
+        return self.name
+
+    def marble_color(self):
+        return self.marble_color()
+
+    def marble_count(self):
+        return self.marble_count
+
+    def captured(self):
+        return self.captured
+
+
+class Kuba:
     X_RANGE = 7
     Y_RANGE = 7
 
-    def __init__(self):
+    def __init__(self, p1: tuple, p2: tuple):
         self.board = [[' ' for _ in range(self.X_RANGE)] for _ in range(self.Y_RANGE)]
 
     def showBoard(self):
         for i in range(self.Y_RANGE):
             print(self.board[i])
+        print()
 
     def clearBoard(self):
         for i in range(self.Y_RANGE):
@@ -54,8 +75,20 @@ class View:
         self.board[4][4] = 'R'
         self.board[5][5] = 'R'
 
+    def get_marble(self, coords: tuple):
+        """Return the marble at the given position"""
+        row = coords[0]
+        col = coords[1]
+        return self.board[row][col]
+
+    # Functions that may be spun off into their own classl later.
+    def
+
 
 if __name__ == '__main__':
-    board = View()
-    board.setupBoard()
-    board.showBoard()
+    game = Kuba()
+    game.setupBoard()
+    game.showBoard()
+
+    p1 = Player('p1', 'W')
+    p2 = Player('p2', 'B')
