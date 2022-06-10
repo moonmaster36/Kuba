@@ -3,19 +3,19 @@ class Player:
         self.name = name
         self.marble_color = marble_color
         self.marble_count = 8
-        self.captured = 0
+        self.captured_count = 0
 
     def get_name(self):
         return self.name
 
-    def marble_color(self):
-        return self.marble_color()
+    def get_marble_color(self):
+        return self.marble_color
 
     def marble_count(self):
         return self.marble_count
 
-    def captured(self):
-        return self.captured
+    def get_captured_count(self):
+        return self.captured_count
 
 
 class Kuba:
@@ -23,7 +23,54 @@ class Kuba:
     Y_RANGE = 7
 
     def __init__(self, p1: tuple, p2: tuple):
+        self.p1 = Player(p1[0], p1[1])
+        self.p2 = Player(p2[0], p2[1])
         self.board = [[' ' for _ in range(self.X_RANGE)] for _ in range(self.Y_RANGE)]
+        self.red = 13
+        self.white = 8
+        self.black = 8
+        self.current_turn = None
+        self.winner = None
+
+    def get_current_turn(self):
+        if self.current_turn:
+            return self.current_turn.get_name()
+        else:
+            return None
+
+    def get_winner(self):
+        if self.winner:
+            return self.winner.get_name()
+        else:
+            return None
+
+    def get_captured(self, playername):
+        if self.p1.get_name() == playername:
+            return self.p1.get_captured_count()
+        else:
+            return self.p2.get_captured_count()
+
+    def get_marble(self, coords: tuple):
+        """Return the marble at the given position"""
+        row = coords[0]
+        col = coords[1]
+        return self.board[row][col]
+
+    def get_marble_count(self):
+        white, black, red = 0, 0, 0
+
+        for i in range(self.Y_RANGE):
+            for j in range(self.X_RANGE):
+                current_marble = self.board[i][j]
+                if current_marble == 'W':
+                    white += 1
+                elif current_marble == 'B':
+                    black += 1
+                elif current_marble == 'R':
+                    red += 1
+        return white, black, red
+
+
 
     def showBoard(self):
         for i in range(self.Y_RANGE):
@@ -73,22 +120,14 @@ class Kuba:
         self.board[4][2] = 'R'
         self.board[4][3] = 'R'
         self.board[4][4] = 'R'
-        self.board[5][5] = 'R'
-
-    def get_marble(self, coords: tuple):
-        """Return the marble at the given position"""
-        row = coords[0]
-        col = coords[1]
-        return self.board[row][col]
+        self.board[5][3] = 'R'
 
     # Functions that may be spun off into their own classl later.
-    def
 
 
 if __name__ == '__main__':
-    game = Kuba()
+    game = Kuba(('p1', 'W'), ('p2', 'B'))
     game.setupBoard()
     game.showBoard()
 
-    p1 = Player('p1', 'W')
-    p2 = Player('p2', 'B')
+    print(game.get_marble_count())
