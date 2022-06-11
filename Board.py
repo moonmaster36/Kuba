@@ -136,7 +136,9 @@ class Kuba:
         self.board[5][3] = 'R'
 
     def make_move(self, name: str, coords: tuple, direction: str) -> bool:
-        pass
+        candidate = self.get_marble(coords)
+        # Verify that the player is allowed to move that marble.
+        print(F'candidate = {candidate}')
 
 
     # Functions that may be spun off into their own class later.
@@ -148,4 +150,4 @@ if __name__ == '__main__':
     game.showBoard()
     game.showGame()
 
-    print(game.get_marble_count())
+    game.make_move((1, 0), 'B')
