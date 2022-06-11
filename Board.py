@@ -11,7 +11,7 @@ class Player:
     def get_marble_color(self):
         return self.marble_color
 
-    def marble_count(self):
+    def get_marble_count(self):
         return self.marble_count
 
     def get_captured_count(self):
@@ -70,8 +70,6 @@ class Kuba:
                     red += 1
         return white, black, red
 
-
-
     def showBoard(self):
         for i in range(self.Y_RANGE):
             print(self.board[i])
@@ -81,6 +79,21 @@ class Kuba:
         for i in range(self.Y_RANGE):
             self.board[i].clear()
         self.board = [[' ' for _ in range(self.X_RANGE)] for _ in range(self.Y_RANGE)]
+
+    def showGame(self):
+        """Prints various details about the game."""
+        print(F'-------- Game Details --------')
+        print(f'Board Status: \nWhite: {self.white} \nBlack: {self.black} \nRed: {self.red}\n')
+        print(F'Player 1: {self.p1.get_name()}')
+        print(F'Marble Color: {self.p1.get_marble_color()}')
+        print(f'Marble Count: {self.p1.get_marble_count()}')
+        print(F'Captured: {self.get_captured(self.p1.get_name())}')
+        print()
+        print(F'Player 2: {self.p2.get_name()}')
+        print(F'Marble Color: {self.p1.get_marble_color()}')
+        print(f'Marble Count: {self.p1.get_marble_count()}')
+        print(F'Captured: {self.get_captured(self.p1.get_name())}')
+        print('------------------------------')
 
     def setupBoard(self):
         # Top left
@@ -122,12 +135,17 @@ class Kuba:
         self.board[4][4] = 'R'
         self.board[5][3] = 'R'
 
-    # Functions that may be spun off into their own classl later.
+    def make_move(self, name: str, coords: tuple, direction: str) -> bool:
+        pass
+
+
+    # Functions that may be spun off into their own class later.
 
 
 if __name__ == '__main__':
     game = Kuba(('p1', 'W'), ('p2', 'B'))
     game.setupBoard()
     game.showBoard()
+    game.showGame()
 
     print(game.get_marble_count())
