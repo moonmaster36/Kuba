@@ -19,13 +19,13 @@ class Player:
 
 
 class Kuba:
-    X_RANGE = 7
-    Y_RANGE = 7
+    ROW_RANGE = 7
+    COL_RANGE = 7
 
     def __init__(self, p1: tuple, p2: tuple):
         self.p1 = Player(p1[0], p1[1])
         self.p2 = Player(p2[0], p2[1])
-        self.board = [[' ' for _ in range(self.X_RANGE)] for _ in range(self.Y_RANGE)]
+        self.board = [[' ' for _ in range(self.ROW_RANGE)] for _ in range(self.COL_RANGE)]
         self.red = 13
         self.white = 8
         self.black = 8
@@ -54,13 +54,15 @@ class Kuba:
         """Return the marble at the given position"""
         row = coords[0]
         col = coords[1]
-        return self.board[row][col]
+        # Determine if coords are valid
+        if 0 <= row < self.ROW_RANGE and 0 < col < self.COL_RANGE:
+            return self.board[row][col]
 
     def get_marble_count(self):
         white, black, red = 0, 0, 0
 
-        for i in range(self.Y_RANGE):
-            for j in range(self.X_RANGE):
+        for i in range(self.COL_RANGE):
+            for j in range(self.ROW_RANGE):
                 current_marble = self.board[i][j]
                 if current_marble == 'W':
                     white += 1
@@ -71,14 +73,14 @@ class Kuba:
         return white, black, red
 
     def showBoard(self):
-        for i in range(self.Y_RANGE):
+        for i in range(self.COL_RANGE):
             print(self.board[i])
         print()
 
     def clearBoard(self):
-        for i in range(self.Y_RANGE):
+        for i in range(self.COL_RANGE):
             self.board[i].clear()
-        self.board = [[' ' for _ in range(self.X_RANGE)] for _ in range(self.Y_RANGE)]
+        self.board = [[' ' for _ in range(self.ROW_RANGE)] for _ in range(self.COL_RANGE)]
 
     def showGame(self):
         """Prints various details about the game."""
@@ -135,13 +137,42 @@ class Kuba:
         self.board[4][4] = 'R'
         self.board[5][3] = 'R'
 
-    def make_move(self, name: str, coords: tuple, direction: str) -> bool:
-        candidate = self.get_marble(coords)
-        # Verify that the player is allowed to move that marble.
-        print(F'candidate = {candidate}')
+    def get_player(self, playername):
+        """Returns the player object given a player name."""
+        if self.p1.get_name() == playername:
+            return self.p1
 
+        if self.p2.get_name() == playername:
+            return self.p2
 
-    # Functions that may be spun off into their own class later.
+    def validate_move(self, playername: str, coords: tuple, direction: str) -> bool:
+        """Validates a move"""
+        # Verify that the player is allowed to move the chosen marble.
+        candidate_marble = self.get_marble(coords)
+        candidate_player = self.get_player(playername)
+        print(f'candidate_marble = {candidate_marble}\ncandidate_player = {candidate_player.get_name()}')
+        if candidate_marble != candidate_player.get_marble_color():
+            return False
+
+        # Move has been made and it is not playername's turn
+        if self.get_current_turn() and self.get_current_turn() != playername:
+            return False
+
+        # Assuming current turn is None or current player, so switch current turn for next current_turn
+        if self.p1.get_name() == playername:
+            self.current_turn = self.p2
+        else:
+            self.current_turn = self.p1
+
+        return True
+
+    def make_move(self, playername: str, coords: tuple, direction: str) -> bool:
+        valid = self.validate_move(playername, coords, direction)
+        print(F'valid = {valid}')
+        if not valid:
+            return False
+        print()
+
 
 
 if __name__ == '__main__':
@@ -150,4 +181,5 @@ if __name__ == '__main__':
     game.showBoard()
     game.showGame()
 
-    game.make_move((1, 0), 'B')
+    print(game.make_move('p1', (1, 0), 'B'))
+    print(game.make_move('p2', (2, 2), 'R'))
