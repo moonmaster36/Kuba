@@ -32,6 +32,9 @@ class Kuba:
         self.current_turn = None
         self.winner = None
 
+    def get_board(self):
+        return self.board
+
     def get_current_turn(self):
         if self.current_turn:
             return self.current_turn.get_name()
@@ -55,7 +58,7 @@ class Kuba:
         row = coords[0]
         col = coords[1]
         # Determine if coords are valid
-        if 0 <= row < self.ROW_RANGE and 0 < col < self.COL_RANGE:
+        if 0 <= row < self.ROW_RANGE and 0 <= col < self.COL_RANGE:
             return self.board[row][col]
 
     def get_marble_count(self):
@@ -164,7 +167,50 @@ class Kuba:
         else:
             self.current_turn = self.p1
 
+        row = coords[0]
+        col = coords[1]
+        opposite_marble = None
+        # Check if marble exists in opposite location of direction of move.
+        # Check forward space.
+        if direction == 'B':
+            candidate_coords = (row - 1, col)  # Check forward space.
+        # Check
+        if direction == 'R':
+            candidate_coords = (row, col - 1)  # Check left space.
+
+        if direction == 'F':
+            candidate_coords = (row + 1, col)  # Check backward space.
+
+        if direction == 'L':
+            candidate_coords = (row, col + 1)  # Check right space
+
         return True
+
+    def get_opposite_marble(self, coords: tuple, direction: str):
+        """
+        Return marble in space opposite of direction. If no marble in space opposite,
+        returns None.
+        """
+        row = coords[0]
+        col = coords[1]
+        candidate_coords = None
+        # Check if marble exists in opposite location of direction of move.
+        # Check forward space.
+        if direction == 'B':
+            candidate_coords = (row - 1, col)  # Check forward space.
+        # Check
+        if direction == 'R':
+            candidate_coords = (row, col - 1)  # Check left space.
+
+        if direction == 'F':
+            candidate_coords = (row + 1, col)  # Check backward space.
+
+        if direction == 'L':
+            candidate_coords = (row, col + 1)  # Check right space
+
+        print(F'coords={coords}, candidate_coords = {candidate_coords}')
+        opposite_marble = self.get_marble(candidate_coords)
+        return opposite_marble
 
     def make_move(self, playername: str, coords: tuple, direction: str) -> bool:
         valid = self.validate_move(playername, coords, direction)
@@ -174,12 +220,16 @@ class Kuba:
         print()
 
 
-
 if __name__ == '__main__':
     game = Kuba(('p1', 'W'), ('p2', 'B'))
     game.setupBoard()
     game.showBoard()
-    game.showGame()
+    # game.showGame()
 
-    print(game.make_move('p1', (1, 0), 'B'))
-    print(game.make_move('p2', (2, 2), 'R'))
+    # # print(game.make_move('p1', (1, 0), 'B'))
+    # # print(game.make_move('p2', (2, 2), 'R'))
+    # board = game.get_board()
+    # board[0][2] = 'R'
+    # board[2][0] = 'R'
+    # game.showBoard()
+    # print(game.get_opposite_marble((0, 0), 'F'))
