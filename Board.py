@@ -100,16 +100,16 @@ class Kuba:
     def showGame(self):
         """Prints various details about the game."""
         print(F'-------- Game Details --------')
-        print(f'Board Status: \nWhite: {self.white} \nBlack: {self.black} \nRed: {self.red}\n')
+        print(f'Board Status: \nWhite: {self.white_marbles} \nBlack: {self.black_marbles} \nRed: {self.red_marbles}\n')
         print(F'Player 1: {self.p1.get_name()}')
         print(F'Marble Color: {self.p1.get_marble_color()}')
         print(f'Marble Count: {self.p1.get_marble_count()}')
         print(F'Captured: {self.get_captured(self.p1.get_name())}')
         print()
         print(F'Player 2: {self.p2.get_name()}')
-        print(F'Marble Color: {self.p1.get_marble_color()}')
-        print(f'Marble Count: {self.p1.get_marble_count()}')
-        print(F'Captured: {self.get_captured(self.p1.get_name())}')
+        print(F'Marble Color: {self.p2.get_marble_color()}')
+        print(f'Marble Count: {self.p2.get_marble_count()}')
+        print(F'Captured: {self.get_captured(self.p2.get_name())}')
         print('------------------------------')
 
     def setupBoard(self):
@@ -224,37 +224,17 @@ class Kuba:
         if direction == 'R':
             row = coords[0]
             col = coords[1]
-
             start = coords[1]
-            end = start
-            while end < self.COL_RANGE and self.get_marble((row, end)) != ' ':
-                end += 1
-            print(f'end = {end}')
-            # Check if we hit the edge. If we did, 1 marble will be removed.
-            if not self.get_marble((row, end + 1)):
-                # Make sure we don't push our own marbles off.
-                end_marble = self.get_marble((row, end))
-                if end_marble == current_player.get_marble_color():
-                    return False
-                elif end_marble == 'R':
-                    current_player.increase_captured_count(1)
-                """
-                6/13/2022
-                //*  Should not be needed because we manually update all marble counts at end.
-                else:
-                    # Other player lost a marble
-                    if playername == self.p1.get_name():
-                        self.p2.decrement_marble_count(1)
-                    else:
-                        self.p1.decrement_marble_count(1)
-                """
+            cur_row = self.board[row]
+            cur_row_copy = copy.deepcopy(cur_row)
+            successful_right_move = self.move_right(row, cur_row_copy, start, current_player)
 
-            # Move the marbles..
-            cur_row = copy.deepcopy(self.board[row])
-            print(cur_row[col:])
-            temp = cur_row[start]
-            for i in range(start + 1, end + 1):
-                pass
+            if not successful_right_move:
+                return False
+            # Replace the previous row_number with the updated row_number.
+            self.board[row].clear()
+            for i in range(len(cur_row_copy)):
+                self.board[row].append(cur_row_copy[i])
 
         # Assuming move was valid, so switch current turn for next current_turn
         if self.p1.get_name() == playername:
@@ -277,6 +257,38 @@ class Kuba:
 
         return True
 
+    def move_right(self, row_number, row, start, current_player):
+        row_copy = copy.deepcopy(row)
+        # Find the end
+        end = start
+        while end < self.COL_RANGE and self.get_marble((row_number, end)) != ' ':
+            end += 1
+
+        if end <= start:
+            return False
+
+        if end == len(row_copy):
+            end -= 2
+
+        for i in range(end, start, -1):
+            row_copy[i] = row_copy[i - 1]
+        row_copy[start] = ' '
+
+        # Check if we hit the edge. If we did, 1 marble will be removed.
+        if not self.get_marble((row_number, end + 1)):
+            # Make sure we don't push our own marbles off.
+            end_marble = self.get_marble((row_number, end))
+            if end_marble == current_player.get_marble_color():
+                return False
+            elif end_marble == 'R':
+                current_player.increase_captured_count(1)
+
+        # Copy new row_number into board.
+        for i in range(self.COL_RANGE):
+            row[i] = row_copy[i]
+
+        return True
+
 
 if __name__ == '__main__':
     game = Kuba(('p1', 'W'), ('p2', 'B'))
@@ -284,6 +296,23 @@ if __name__ == '__main__':
     game.showBoard()
 
     # Implementing right move.
-    print(f"make_move = {game.make_move('p1', (0, 0), 'R')}")
-
+    print(f"make_move = {game.make_move('p1', (1, 0), 'R')}")
     game.showBoard()
+
+    print(f"make_move = {game.make_move('p2', (6, 0), 'R')}")
+
+    print(f"make_move = {game.make_move('p1', (1, 1), 'R')}")
+
+    print(f"make_move = {game.make_move('p2', (6, 1), 'R')}")
+
+    print(f"make_move = {game.make_move('p1', (1, 2), 'R')}")
+    game.showBoard()
+
+    print(f"make_move = {game.make_move('p2', (6, 2), 'R')}")
+    game.showBoard()
+
+    print(f"make_move = {game.make_move('p1', (1, 3), 'R')}")
+    game.showBoard()
+
+    game.showGame()
+
