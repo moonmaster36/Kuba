@@ -256,13 +256,15 @@ class Kuba:
 
     def move_right(self, row_input, start, current_player):
         """
-        * Push marbles at start in row_input to the right.
-        * Determines number of marbles affected by move, then shifts
-            the marbles over.
-        * If player attempts to push own marble off, the move is abandoned and returns False
-        * Opponent marbles on edge of board are pushed off, marble count is updated at end of function.
-        * Red (neutral) marbles pushed off board are captured by the current_player. Captured count is
-            updated immediately after a red marble is pushed off.
+        - Push marbles at start in row_input to the right.
+        - Determines number of marbles affected by move,
+            then shifts the marbles over.
+        - If player attempts to push own marble off, the
+            move is abandoned and returns False
+        - Opponent marbles on edge of board are pushed off,
+            marble count is updated at end of function.
+        - Red (neutral) marbles pushed off board are captured by the current_player.
+            Captured count is updated immediately after a red marble is pushed off.
         :param row_input: row in board to shift
         :param start: marble being pushed
         :param current_player: player pushing marble
