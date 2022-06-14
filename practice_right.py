@@ -19,22 +19,6 @@ def old_shift(start, row):
     print(F'   ({start}, {end}) {new_row}')
 
 
-def shift(start, row):
-    new_row = row[:]
-    end = start
-    while end < len(row) and row[end] != ' ':
-        end += 1
-    for i in range(start + 1, end + 2):
-        print(i, row[i])
-    # j = end - 1
-    # for i in range(end, start, -1):
-    #     # print(i, row[i], row[j])
-    #     new_row[i] = row[j]
-    #     j -= 1
-    new_row[start] = ' '
-    print(F'   ({start}, {end}) {new_row}')
-
-
 def move(nums, start):
     new = nums[:]
     cur = start
@@ -43,7 +27,7 @@ def move(nums, start):
     while end < len(nums) and nums[end]:
         end += 1
 
-    # If our end is the edge, we know a marble is being pushed off. 
+    # If our end is the edge, we know a marble is being pushed off.
     if end == len(nums):
         end -= 1
 
@@ -57,31 +41,59 @@ def move(nums, start):
     print(f'{nums} ({start}, {end})')
 
 
+def shift(row_input, start):
+    temp_row = row_input[:]
+    end = start
+    while end < len(row_input) and row_input[end] != ' ':
+        end += 1
+    # If our end is the edge, we know a marble is being pushed off.
+    if end == len(row_input):
+        end -= 1
+    cur = start
+    for i in range(start + 1, end + 1):
+        temp_row[i] = row_input[cur]
+        cur += 1
+    temp_row[start] = ' '
+    # Copy into input row
+    for i in range(len(temp_row)):
+        row_input[i] = temp_row[i]
+    print(F'   ({start}, {end}) {temp_row}')
+
+
 if __name__ == '__main__':
-    a1 = [1, 2, 3, 4, None, None]
-    a = [1, 2, None, None, None, None, 5]
-    print(a)
-    move(a, 0)
-    move(a, 1)
-    move(a, 2)
-    move(a, 3)
-    move(a, 4)
 
 
-    # new2 = move(new1, 1, 5)
-    # new3 = move(new2, 2, 6)
-    # new4 = move(new3, 3, 6)
-    # new5 = move(new4, 4, 6)
-    # print(move(a, 2, 6))
-
-    """
     starting_row = ['W', 'W', ' ', 'R', ' ', 'B', 'B']
     print(f'Original: {starting_row}')
-    shift(0, starting_row)
+    shift(starting_row, 0)
+    shift(starting_row, 1)
+    shift(starting_row, 2)
+    shift(starting_row, 3)
+    shift(starting_row, 4)
+
+
+
     # shift(1, [' ', 'W', 'W', 'R', ' ', 'B', 'B'])
     # shift(2, [' ', ' ', 'W', 'W', 'R', 'B', 'B'])
-    """
+
     # row1 = [' ', ' ', ' ', 'W', 'W', 'R', 'B']
     # cur_row = ['W', 'W', 'R', 'R', 'R', 'B', ' ']
     # cur_row = ['W', 'W', ' ', ' ', ' ', 'B', 'B']
     # row = ['W', 'W', ' ', 'R', ' ', 'B', 'B']
+
+    """
+        a1 = [1, 2, 3, 4, None, None]
+        a = [1, 2, None, None, None, None, 5]
+        print(a)
+        move(a, 0)
+        move(a, 1)
+        move(a, 2)
+        move(a, 3)
+        move(a, 4)
+
+        # new2 = move(new1, 1, 5)
+        # new3 = move(new2, 2, 6)
+        # new4 = move(new3, 3, 6)
+        # new5 = move(new4, 4, 6)
+        # print(move(a, 2, 6))
+        """
