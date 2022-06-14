@@ -44,14 +44,14 @@ class Kuba:
         self.current_turn = None
         self.winner = None
 
+    def set_turn(self, x):
+        self.current_turn = x
+
     def get_board(self):
         return self.board
 
     def get_current_turn(self):
-        if self.current_turn:
-            return self.current_turn.get_name()
-        else:
-            return None
+        return self.current_turn
 
     def get_winner(self):
         if self.winner:
@@ -100,7 +100,11 @@ class Kuba:
     def showGame(self):
         """Prints various details about the game."""
         print(F'-------- Game Details --------')
-        print(f'Board Status: \nWhite: {self.white_marbles} \nBlack: {self.black_marbles} \nRed: {self.red_marbles}\n')
+        print(f'Board Status: \nWhite: {self.white_marbles} \nBlack: {self.black_marbles} \nRed: {self.red_marbles}')
+        print(f'Winner: {self.get_winner()}')
+        print(f'Turn: {self.get_current_turn()}')
+
+        print()
         print(F'Player 1: {self.p1.get_name()}')
         print(F'Marble Color: {self.p1.get_marble_color()}')
         print(f'Marble Count: {self.p1.get_marble_count()}')
@@ -187,11 +191,9 @@ class Kuba:
     def validate_move(self, playername: str, coords: tuple, direction: str) -> bool:
         """Validates a move"""
         # Verify that the player is allowed to move the chosen marble.
-        # print(F'{playername} attempting to move {coords} {direction}')
-        # print(F'marble @ {coords} = {self.get_marble(coords)}')
         candidate_marble = self.get_marble(coords)
         candidate_player = self.get_player(playername)
-        # print(f'candidate_marble = {candidate_marble}\ncandidate_player = {candidate_player.get_name()}')
+
         if candidate_marble != candidate_player.get_marble_color():
             return False
 
@@ -201,7 +203,7 @@ class Kuba:
 
         # Check for space to push.
         opposite_marble = self.get_opposite_marble(coords, direction)
-        # print(f'opposite_marble = {opposite_marble}')
+
         # Pushing from edge
         if opposite_marble == 'W' or opposite_marble == 'B' or opposite_marble == 'R':
             return False
@@ -238,9 +240,9 @@ class Kuba:
 
         # Assuming move was valid, so switch current turn for next current_turn
         if self.p1.get_name() == playername:
-            self.current_turn = self.p2
+            self.current_turn = self.p2.get_name()
         else:
-            self.current_turn = self.p1
+            self.current_turn = self.p1.get_name()
 
         # Update all marble counts
         new_counts = self.get_marble_count()
@@ -296,23 +298,21 @@ if __name__ == '__main__':
     game.showBoard()
 
     # Implementing right move.
-    print(f"make_move = {game.make_move('p1', (1, 0), 'R')}")
+    print(f"1. make_move = {game.make_move('p1', (1, 0), 'R')}")
     game.showBoard()
+    game.set_turn('p1')
+    print(F'current_turn = {game.current_turn}')
 
-    print(f"make_move = {game.make_move('p2', (6, 0), 'R')}")
-
-    print(f"make_move = {game.make_move('p1', (1, 1), 'R')}")
-
-    print(f"make_move = {game.make_move('p2', (6, 1), 'R')}")
-
-    print(f"make_move = {game.make_move('p1', (1, 2), 'R')}")
+    print(f"2. make_move = {game.make_move('p1', (1, 1), 'R')}")
     game.showBoard()
+    game.set_turn('p1')
 
-    print(f"make_move = {game.make_move('p2', (6, 2), 'R')}")
+    print(f"3. make_move = {game.make_move('p1', (1, 2), 'R')}")
     game.showBoard()
+    game.set_turn('p1')
 
-    print(f"make_move = {game.make_move('p1', (1, 3), 'R')}")
+    print(f"4. make_move = {game.make_move('p1', (1, 3), 'R')}")
     game.showBoard()
+    game.set_turn('p1')
 
     game.showGame()
-
