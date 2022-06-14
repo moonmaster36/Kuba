@@ -223,11 +223,9 @@ class Kuba:
 
         # RIGHT MOVEMENT ONLY
         if direction == 'R':
-            row = coords[0]
-            col = coords[1]
+            row_number = coords[0]
             start = coords[1]
-            cur_row = self.board[row]
-            successful_right_move = self.move_right(self.board[row], start, current_player)
+            successful_right_move = self.move_right(self.board[row_number], start, current_player)
 
             if not successful_right_move:
                 return False
@@ -235,7 +233,17 @@ class Kuba:
         # LEFT MOVEMENT ONLY
         elif direction == 'L':
             # Left movement is accomplished by reversing the row and using move_right function
-            pass
+            row_number = coords[0]
+            start = coords[1]
+            original_row = self.board[coords[0]]
+            row_copy = copy.deepcopy(self.board[row_number])
+            row_copy.reverse()
+            new_start = self.COL_RANGE - 1 - start
+            print(F'row_copy = {row_copy}')
+            successful_left_move = self.move_right(row_copy, new_start)
+            print(F'row_copy = {row_copy}')
+            if not successful_left_move:
+                return False
 
         # Assume move was valid, switch current turn for next current_turn
         if self.p1.get_name() == playername:
@@ -308,9 +316,9 @@ class Kuba:
 
 
 if __name__ == '__main__':
-    """
+
     game = Kuba(('p1', 'W'), ('p2', 'B'))
-    game.setupBoard()   
+    game.setupBoard()
     game.showBoard()
 
     # Implementing left move. Moving white on (5,6) to left
@@ -319,36 +327,6 @@ if __name__ == '__main__':
     game.set_turn('p1')
     print(F'current_turn = {game.current_turn}')
     game.showGame()
-    """
 
-    game = Kuba(('p1', 'W'), ('p2', 'B'))
-    game.setupBoard()
-    game.showBoard()
 
-    # Implementing right move.
-    print(f"1. make_move = {game.make_move('p1', (1, 0), 'R')}")
-    game.showBoard()
-    game.set_turn('p1')
-    print(F'current_turn = {game.current_turn}')
 
-    print(f"2. make_move = {game.make_move('p1', (1, 1), 'R')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"3. make_move = {game.make_move('p1', (1, 2), 'R')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"4. make_move = {game.make_move('p1', (1, 3), 'R')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"5. make_move = {game.make_move('p1', (1, 4), 'R')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"6. make_move = {game.make_move('p1', (1, 5), 'R')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    game.showGame()
