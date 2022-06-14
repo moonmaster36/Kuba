@@ -329,7 +329,6 @@ if __name__ == '__main__':
     game.showBoard()
     game.set_turn('p1')
 
-
     print(f"6. make_move = {game.make_move('p1', (1, 5), 'R')}")
     game.showBoard()
     game.set_turn('p1')
