@@ -169,14 +169,14 @@ class Kuba:
 
         if direction == 'L':
             candidate_coords = (row, col + 1)  # Check right space
-
-        print(F'coords={coords}, candidate_coords = {candidate_coords}')
         opposite_marble = self.get_marble(candidate_coords)
         return opposite_marble
 
     def validate_move(self, playername: str, coords: tuple, direction: str) -> bool:
         """Validates a move"""
         # Verify that the player is allowed to move the chosen marble.
+        print(F'{playername} attempting to move {coords} {direction}')
+        print(F'marble @ {coords} = {self.get_marble(coords)}')
         candidate_marble = self.get_marble(coords)
         candidate_player = self.get_player(playername)
         print(f'candidate_marble = {candidate_marble}\ncandidate_player = {candidate_player.get_name()}')
@@ -187,19 +187,15 @@ class Kuba:
         if self.get_current_turn() and self.get_current_turn() != playername:
             return False
 
-        # Assuming current turn is None or current player, so switch current turn for next current_turn
-        if self.p1.get_name() == playername:
-            self.current_turn = self.p2
-        else:
-            self.current_turn = self.p1
-
-        row = coords[0]
-        col = coords[1]
         # Check for space to push.
         opposite_marble = self.get_opposite_marble(coords, direction)
         print(f'opposite_marble = {opposite_marble}')
+        # Pushing from edge
         if opposite_marble:
             return False
+
+        # Check if move will push player's own marble off
+
 
         return True
 
@@ -210,8 +206,13 @@ class Kuba:
         print(F'valid = {valid}')
         if not valid:
             return False
-        print()
+        # Assuming move is valid, so switch current turn for next current_turn
+        if self.p1.get_name() == playername:
+            self.current_turn = self.p2
+        else:
+            self.current_turn = self.p1
 
+        return True
 
 if __name__ == '__main__':
     game = Kuba(('p1', 'W'), ('p2', 'B'))
@@ -219,7 +220,10 @@ if __name__ == '__main__':
     game.showBoard()
     # game.showGame()
 
-    print(game.make_move('p1', (0, 1), 'B'))
+    move = game.validate_move('p1', (1, 1), 'F')
+    print(F'move = {move}')
+    # move = game.validate_move('p1', (1, 1), 'F')
+    # print(f'move = {move}')
     # # print(game.make_move('p2', (2, 2), 'R'))
     # board = game.get_board()
     # board[0][2] = 'R'
