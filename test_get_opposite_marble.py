@@ -7,7 +7,7 @@ class TestValidateMove(unittest.TestCase):
     def test_backward_move(self):
         """
         Expect forward coords
-        (row - 1, col)
+        (row_number - 1, col)
         """
         test_game = Kuba(('p1', 'W'), ('p2', 'B'))
         test_game.setupBoard()
@@ -20,7 +20,7 @@ class TestValidateMove(unittest.TestCase):
     def test_right_move(self):
         """
         Expect left coords
-        (row, col  - 1)
+        (row_number, col  - 1)
         """
         test_game = Kuba(('p1', 'W'), ('p2', 'B'))
         test_game.setupBoard()
@@ -33,7 +33,7 @@ class TestValidateMove(unittest.TestCase):
     def test_forward_move(self):
         """
         Expect backward coords
-        (row + 1, col)
+        (row_number + 1, col)
         """
         test_game = Kuba(('p1', 'W'), ('p2', 'B'))
         test_game.setupBoard()
@@ -46,7 +46,7 @@ class TestValidateMove(unittest.TestCase):
     def test_left_move(self):
         """
         Expect right coords
-        (row + 1, col)
+        (row_number + 1, col)
         """
         test_game = Kuba(('p1', 'W'), ('p2', 'B'))
         test_game.setupBoard()
