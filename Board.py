@@ -26,7 +26,7 @@ class Player:
     def decrement_marble_count(self, x):
         self.marble_count -= x
 
-    def increase_captured_count(self, x):
+    def increment_captured_count(self, x):
         self.captured_count += x
 
 
@@ -283,6 +283,9 @@ class Kuba:
         # If our end is the edge, we know a marble is being pushed off.
         if end == len(row_input):
             end -= 1
+            # Determine if a red marble will be pushed off.
+            if row_input[end] == 'R':
+                current_player.increment_captured_count(1)
         temp_row = row_input[:]
         cur = start
         for i in range(start + 1, end + 1):
