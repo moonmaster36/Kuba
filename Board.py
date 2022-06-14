@@ -272,9 +272,13 @@ class Kuba:
         if end == len(row_copy):
             end -= 2
 
-        for i in range(end, start, -1):
-            row_copy[i] = row_copy[i - 1]
-        row_copy[start] = ' '
+        for i in range(start, end + 1):
+            print()
+
+        # 6/14/2022 10:42 AM
+        # for i in range(end, start, -1):
+        #     row_copy[i] = row_copy[i - 1]
+        # row_copy[start] = ' '
 
         # Check if we hit the edge. If we did, 1 marble will be removed.
         if not self.get_marble((row_number, end + 1)):
