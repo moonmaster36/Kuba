@@ -233,7 +233,7 @@ class Kuba:
             if not successful_right_move:
                 return False
 
-        # Assuming move was valid, so switch current turn for next current_turn
+        # Assume move was valid, switch current turn for next current_turn
         if self.p1.get_name() == playername:
             self.current_turn = self.p2.get_name()
         else:
@@ -286,13 +286,16 @@ class Kuba:
             # Determine if a red marble will be pushed off.
             if row_input[end] == 'R':
                 current_player.increment_captured_count(1)
+
+        # Shift marbles over
         temp_row = row_input[:]
         cur = start
         for i in range(start + 1, end + 1):
             temp_row[i] = row_input[cur]
             cur += 1
         temp_row[start] = ' '
-        # Copy into input row
+
+        # Copy temp_row into row_input
         for i in range(len(temp_row)):
             row_input[i] = temp_row[i]
         print(F'   ({start}, {end}) {temp_row}')
@@ -323,6 +326,11 @@ if __name__ == '__main__':
     game.set_turn('p1')
 
     print(f"5. make_move = {game.make_move('p1', (1, 4), 'R')}")
+    game.showBoard()
+    game.set_turn('p1')
+
+
+    print(f"6. make_move = {game.make_move('p1', (1, 5), 'R')}")
     game.showBoard()
     game.set_turn('p1')
 
