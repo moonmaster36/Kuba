@@ -189,7 +189,14 @@ class Kuba:
         return opposite_marble
 
     def validate_move(self, playername: str, coords: tuple, direction: str) -> bool:
-        """Validates a move"""
+        """
+        -Validates a move
+        -NOTE: Player attempting to push own marble off is tested in move_right.
+        :param playername: player pushing marble
+        :param coords: location of marble to push
+        :param direction: direction to push marble in
+        :return:
+        """
         # Verify that the player is allowed to move the chosen marble.
         candidate_marble = self.get_marble(coords)
         candidate_player = self.get_player(playername)
@@ -208,19 +215,14 @@ class Kuba:
         if opposite_marble == 'W' or opposite_marble == 'B' or opposite_marble == 'R':
             return False
 
-        # Check if move will push player's own marble off
-
         return True
 
     def make_move(self, playername: str, coords: tuple, direction: str) -> bool:
-        # print(F'{playername} attempting to move {coords} {direction}')
-        # print(F'marble @ {coords} = {self.get_marble(coords)}')
         valid = self.validate_move(playername, coords, direction)
         if not valid:
             return False
 
         current_player = self.get_player(playername)
-
         # RIGHT MOVEMENT ONLY
         if direction == 'R':
             row_number = coords[0]
