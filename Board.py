@@ -224,8 +224,6 @@ class Kuba:
         if direction == 'R':
             row = coords[0]
             col = coords[1]
-            cur_row = copy.deepcopy(self.board[row])
-            print(cur_row[col:])
 
             start = coords[1]
             end = start
@@ -233,8 +231,7 @@ class Kuba:
                 end += 1
             print(f'end = {end}')
             # Check if we hit the edge. If we did, 1 marble will be removed.
-            right_of_end_marble = self.get_marble((row, end + 1))
-            if not right_of_end_marble:
+            if not self.get_marble((row, end + 1)):
                 # Make sure we don't push our own marbles off.
                 end_marble = self.get_marble((row, end))
                 if end_marble == current_player.get_marble_color():
@@ -251,6 +248,13 @@ class Kuba:
                     else:
                         self.p1.decrement_marble_count(1)
                 """
+
+            # Move the marbles..
+            cur_row = copy.deepcopy(self.board[row])
+            print(cur_row[col:])
+            temp = cur_row[start]
+            for i in range(start + 1, end + 1):
+                pass
 
         # Assuming move was valid, so switch current turn for next current_turn
         if self.p1.get_name() == playername:
