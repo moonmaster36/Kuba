@@ -1,3 +1,6 @@
+import copy
+
+
 class Player:
     def __init__(self, name, marble_color):
         self.name = name
@@ -16,6 +19,12 @@ class Player:
 
     def get_captured_count(self):
         return self.captured_count
+
+    def decrement_marble_count(self, x):
+        self.marble_count -= x
+
+    def increase_captured_count(self, x):
+        self.captured_count += x
 
 
 class Kuba:
@@ -196,7 +205,6 @@ class Kuba:
 
         # Check if move will push player's own marble off
 
-
         return True
 
     def make_move(self, playername: str, coords: tuple, direction: str) -> bool:
@@ -205,13 +213,46 @@ class Kuba:
         valid = self.validate_move(playername, coords, direction)
         if not valid:
             return False
-        # Assuming move is valid, so switch current turn for next current_turn
+
+        current_player = self.get_player(playername)
+
+        # Get move range
+        # RIGHT MOVEMENT ONLY
+        if direction == 'R':
+            row = coords[0]
+            col = coords[1]
+            cur_row = copy.deepcopy(self.board[row])
+            print(cur_row[col:])
+
+            start = coords[1]
+            end = start
+            while end < self.COL_RANGE and self.get_marble((row, end)) != ' ':
+                end += 1
+            print(f'end = {end}')
+            # Check if we hit the edge. If we did, 1 marble will be removed.
+            right_of_end_marble = self.get_marble((row, end + 1))
+            if not right_of_end_marble:
+                # Make sure we don't push our own marbles off.
+                end_marble = self.get_marble((row, end))
+                if end_marble == current_player.get_marble_color():
+                    return False
+                elif end_marble == 'R':
+                    current_player.increase_captured_count(1)
+                else:
+                    # Other player lost a marble
+                    if playername == self.p1.get_name():
+                        self.p2.decrement_marble_count(1)
+                    else:
+                        self.p1.decrement_marble_count(1)
+
+        # Assuming move was valid, so switch current turn for next current_turn
         if self.p1.get_name() == playername:
             self.current_turn = self.p2
         else:
             self.current_turn = self.p1
 
         return True
+
 
 if __name__ == '__main__':
     game = Kuba(('p1', 'W'), ('p2', 'B'))
@@ -222,4 +263,3 @@ if __name__ == '__main__':
     print(f"make_move = {game.make_move('p1', (0, 0), 'R')}")
 
     game.showBoard()
-
