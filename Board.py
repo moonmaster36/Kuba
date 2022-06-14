@@ -148,44 +148,6 @@ class Kuba:
         if self.p2.get_name() == playername:
             return self.p2
 
-    def validate_move(self, playername: str, coords: tuple, direction: str) -> bool:
-        """Validates a move"""
-        # Verify that the player is allowed to move the chosen marble.
-        candidate_marble = self.get_marble(coords)
-        candidate_player = self.get_player(playername)
-        print(f'candidate_marble = {candidate_marble}\ncandidate_player = {candidate_player.get_name()}')
-        if candidate_marble != candidate_player.get_marble_color():
-            return False
-
-        # Move has been made and it is not playername's turn
-        if self.get_current_turn() and self.get_current_turn() != playername:
-            return False
-
-        # Assuming current turn is None or current player, so switch current turn for next current_turn
-        if self.p1.get_name() == playername:
-            self.current_turn = self.p2
-        else:
-            self.current_turn = self.p1
-
-        row = coords[0]
-        col = coords[1]
-        opposite_marble = None
-        # Check if marble exists in opposite location of direction of move.
-        # Check forward space.
-        if direction == 'B':
-            candidate_coords = (row - 1, col)  # Check forward space.
-        # Check
-        if direction == 'R':
-            candidate_coords = (row, col - 1)  # Check left space.
-
-        if direction == 'F':
-            candidate_coords = (row + 1, col)  # Check backward space.
-
-        if direction == 'L':
-            candidate_coords = (row, col + 1)  # Check right space
-
-        return True
-
     def get_opposite_marble(self, coords: tuple, direction: str):
         """
         Return marble in space opposite of direction. If no marble in space opposite,
@@ -212,7 +174,38 @@ class Kuba:
         opposite_marble = self.get_marble(candidate_coords)
         return opposite_marble
 
+    def validate_move(self, playername: str, coords: tuple, direction: str) -> bool:
+        """Validates a move"""
+        # Verify that the player is allowed to move the chosen marble.
+        candidate_marble = self.get_marble(coords)
+        candidate_player = self.get_player(playername)
+        print(f'candidate_marble = {candidate_marble}\ncandidate_player = {candidate_player.get_name()}')
+        if candidate_marble != candidate_player.get_marble_color():
+            return False
+
+        # Move has been made and it is not playername's turn
+        if self.get_current_turn() and self.get_current_turn() != playername:
+            return False
+
+        # Assuming current turn is None or current player, so switch current turn for next current_turn
+        if self.p1.get_name() == playername:
+            self.current_turn = self.p2
+        else:
+            self.current_turn = self.p1
+
+        row = coords[0]
+        col = coords[1]
+        # Check for space to push.
+        opposite_marble = self.get_opposite_marble(coords, direction)
+        print(f'opposite_marble = {opposite_marble}')
+        if opposite_marble:
+            return False
+
+        return True
+
     def make_move(self, playername: str, coords: tuple, direction: str) -> bool:
+        print(F'{playername} attempting to move {coords} {direction}')
+        print(F'marble @ {coords} = {self.get_marble(coords)}')
         valid = self.validate_move(playername, coords, direction)
         print(F'valid = {valid}')
         if not valid:
@@ -226,7 +219,7 @@ if __name__ == '__main__':
     game.showBoard()
     # game.showGame()
 
-    # # print(game.make_move('p1', (1, 0), 'B'))
+    print(game.make_move('p1', (0, 1), 'B'))
     # # print(game.make_move('p2', (2, 2), 'R'))
     # board = game.get_board()
     # board[0][2] = 'R'
