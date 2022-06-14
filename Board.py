@@ -20,6 +20,9 @@ class Player:
     def get_captured_count(self):
         return self.captured_count
 
+    def set_marble_count(self, x):
+        self.marble_count = x
+
     def decrement_marble_count(self, x):
         self.marble_count -= x
 
@@ -35,9 +38,9 @@ class Kuba:
         self.p1 = Player(p1[0], p1[1])
         self.p2 = Player(p2[0], p2[1])
         self.board = [[' ' for _ in range(self.ROW_RANGE)] for _ in range(self.COL_RANGE)]
-        self.red = 13
-        self.white = 8
-        self.black = 8
+        self.red_marbles = 13
+        self.white_marbles = 8
+        self.black_marbles = 8
         self.current_turn = None
         self.winner = None
 
@@ -238,18 +241,35 @@ class Kuba:
                     return False
                 elif end_marble == 'R':
                     current_player.increase_captured_count(1)
+                """
+                6/13/2022
+                //*  Should not be needed because we manually update all marble counts at end.
                 else:
                     # Other player lost a marble
                     if playername == self.p1.get_name():
                         self.p2.decrement_marble_count(1)
                     else:
                         self.p1.decrement_marble_count(1)
+                """
 
         # Assuming move was valid, so switch current turn for next current_turn
         if self.p1.get_name() == playername:
             self.current_turn = self.p2
         else:
             self.current_turn = self.p1
+
+        # Update all marble counts
+        new_counts = self.get_marble_count()
+        self.white_marbles = new_counts[0]
+        self.black_marbles = new_counts[1]
+        self.red_marbles = new_counts[2]
+
+        if self.p1.get_marble_color() == 'W':
+            self.p1.set_marble_count(self.white_marbles)
+            self.p2.set_marble_count(self.black_marbles)
+        else:
+            self.p1.set_marble_count(self.black_marbles)
+            self.p2.set_marble_count(self.white_marbles)
 
         return True
 
