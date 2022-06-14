@@ -70,14 +70,10 @@ def shift(row_input, start):
 
 
 if __name__ == '__main__':
-    starting_row = ['W', 'W', ' ', 'R', ' ', 'B', 'B']
+    starting_row = ['W', 'W', 'R', 'R', 'R', 'B', 'W']
     print(f'Original: {starting_row}')
     print(shift(starting_row, 0))
-    print(shift(starting_row, 1))
-    print(shift(starting_row, 2))
-    print(shift(starting_row, 3))
-    print(shift(starting_row, 4))
-    print(shift(starting_row, 5))
+
 
     # shift(1, [' ', 'W', 'W', 'R', ' ', 'B', 'B'])
     # shift(2, [' ', ' ', 'W', 'W', 'R', 'B', 'B'])
