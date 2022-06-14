@@ -363,25 +363,25 @@ if __name__ == '__main__':
     game.showBoard()
     game.set_turn('p1')
 
-    # print(f"3.make_move = {game.make_move('p1', (2, 1), 'B')}")
-    # game.showBoard()
-    # game.set_turn('p1')
-    #
-    # print(f"4.make_move = {game.make_move('p1', (3, 1), 'B')}")
-    # game.showBoard()
-    # game.set_turn('p1')
-    #
-    # print(f"5.make_move = {game.make_move('p1', (4, 1), 'B')}")
-    # game.showBoard()
-    # game.set_turn('p1')
-    #
+    print(f"3.make_move = {game.make_move('p1', (2, 1), 'B')}")
+    game.showBoard()
+    game.set_turn('p1')
+
+    print(f"4.make_move = {game.make_move('p1', (3, 1), 'B')}")
+    game.showBoard()
+    game.set_turn('p1')
+
+    print(f"5.make_move = {game.make_move('p1', (4, 1), 'B')}")
+    game.showBoard()
+    game.set_turn('p1')
+
     # # 6 & 7 try to push our own marble off
-    # print(f"6.make_move = {game.make_move('p1', (5, 1), 'B')}")
-    # game.showBoard()
-    # game.set_turn('p1')
-    #
-    # print(f"7.make_move = {game.make_move('p1', (6, 1), 'B')}")
-    # game.showBoard()
-    # game.set_turn('p1')
+    print(f"6.make_move = {game.make_move('p1', (5, 1), 'B')}")
+    game.showBoard()
+    game.set_turn('p1')
+
+    print(f"7.make_move = {game.make_move('p1', (6, 1), 'B')}")
+    game.showBoard()
+    game.set_turn('p1')
 
     game.showGame()
