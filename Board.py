@@ -236,21 +236,17 @@ class Kuba:
             # Left movement is accomplished by reversing the row and using move_right function
             row_number = coords[0]
             start = coords[1]
-            original_row = self.board[coords[0]]
             row_copy = copy.deepcopy(self.board[row_number])
             row_copy.reverse()
-            new_start = self.COL_RANGE - 1 - start
-            print(F'{row_copy} input to move_right')
+            new_start = self.COL_RANGE - 1 - start                        # Determine starting point in reversed row
             successful_left_move = self.move_right(row_copy, new_start, current_player)
 
             if not successful_left_move:
                 # Return false if player tried to push their own marble off.
                 return False
 
-            print(F'{row_copy} pre-reversal')
             row_copy.reverse()
-            print(F'{row_copy} post-reversal')
-            # Copy post-move row onto game board.
+            # Copy updated row onto game board.
             for i in range(len(row_copy)):
                 self.board[row_number][i] = row_copy[i]
 
@@ -325,7 +321,6 @@ class Kuba:
 
 
 if __name__ == '__main__':
-
     game = Kuba(('p1', 'W'), ('p2', 'B'))
     game.setupBoard()
     game.showBoard()
@@ -361,6 +356,3 @@ if __name__ == '__main__':
     game.set_turn('p1')
 
     game.showGame()
-
-
-
