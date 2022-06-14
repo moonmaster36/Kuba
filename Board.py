@@ -228,7 +228,7 @@ class Kuba:
             col = coords[1]
             start = coords[1]
             cur_row = self.board[row]
-            successful_right_move = self.move_right(self.board[row], start)
+            successful_right_move = self.move_right(self.board[row], start, current_player)
 
             if not successful_right_move:
                 return False
@@ -254,7 +254,21 @@ class Kuba:
 
         return True
 
-    def move_right(self, row_input, start):
+    def move_right(self, row_input, start, current_player):
+        """
+        * Push marbles at start in row_input to the right.
+        * Determines number of marbles affected by move, then shifts
+            the marbles over.
+        * If player attempts to push own marble off, the move is abandoned and returns False
+        * Opponent marbles on edge of board are pushed off, marble count is updated at end of function.
+        * Red (neutral) marbles pushed off board are captured by the current_player. Captured count is
+            updated immediately after a red marble is pushed off.
+        :param row_input: row in board to shift
+        :param start: marble being pushed
+        :param current_player: player pushing marble
+        :return: True if successful
+        :return: False if player tries to knock their own marble off.
+        """
         # Determine number of marbles to move
         end = start
         while end < len(row_input) and row_input[end] != ' ':
@@ -278,6 +292,7 @@ class Kuba:
             row_input[i] = temp_row[i]
         print(F'   ({start}, {end}) {temp_row}')
         return True
+
 
 if __name__ == '__main__':
     game = Kuba(('p1', 'W'), ('p2', 'B'))
