@@ -235,7 +235,7 @@ class Kuba:
         # LEFT MOVEMENT ONLY
         elif direction == 'L':
             # Left movement is accomplished by reversing the row and using move_right function
-            row_copy = 
+            pass
 
         # Assume move was valid, switch current turn for next current_turn
         if self.p1.get_name() == playername:
@@ -292,7 +292,8 @@ class Kuba:
                 current_player.increment_captured_count(1)
 
         # Shift marbles over
-        temp_row = row_input[:]
+        # temp_row = row_input[:]
+        temp_row = copy.deepcopy(row_input)
         cur = start
         for i in range(start + 1, end + 1):
             temp_row[i] = row_input[cur]
@@ -307,8 +308,9 @@ class Kuba:
 
 
 if __name__ == '__main__':
+    """
     game = Kuba(('p1', 'W'), ('p2', 'B'))
-    game.setupBoard()
+    game.setupBoard()   
     game.showBoard()
 
     # Implementing left move. Moving white on (5,6) to left
@@ -316,5 +318,37 @@ if __name__ == '__main__':
     game.showBoard()
     game.set_turn('p1')
     print(F'current_turn = {game.current_turn}')
+    game.showGame()
+    """
+
+    game = Kuba(('p1', 'W'), ('p2', 'B'))
+    game.setupBoard()
+    game.showBoard()
+
+    # Implementing right move.
+    print(f"1. make_move = {game.make_move('p1', (1, 0), 'R')}")
+    game.showBoard()
+    game.set_turn('p1')
+    print(F'current_turn = {game.current_turn}')
+
+    print(f"2. make_move = {game.make_move('p1', (1, 1), 'R')}")
+    game.showBoard()
+    game.set_turn('p1')
+
+    print(f"3. make_move = {game.make_move('p1', (1, 2), 'R')}")
+    game.showBoard()
+    game.set_turn('p1')
+
+    print(f"4. make_move = {game.make_move('p1', (1, 3), 'R')}")
+    game.showBoard()
+    game.set_turn('p1')
+
+    print(f"5. make_move = {game.make_move('p1', (1, 4), 'R')}")
+    game.showBoard()
+    game.set_turn('p1')
+
+    print(f"6. make_move = {game.make_move('p1', (1, 5), 'R')}")
+    game.showBoard()
+    game.set_turn('p1')
 
     game.showGame()
