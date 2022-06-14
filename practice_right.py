@@ -19,7 +19,7 @@ def old_shift(start, row):
     print(F'   ({start}, {end}) {new_row}')
 
 
-def move(nums, start):
+def move_nums(nums, start):
     new = nums[:]
     cur = start
 
@@ -30,6 +30,8 @@ def move(nums, start):
     # If our end is the edge, we know a marble is being pushed off.
     if end == len(nums):
         end -= 1
+
+    # Check to see if this will knock our own marble off
 
     for i in range(start + 1, end + 1):
         new[i] = nums[cur]
@@ -42,13 +44,19 @@ def move(nums, start):
 
 
 def shift(row_input, start):
-    temp_row = row_input[:]
+    # Determine number of marbles to move
     end = start
     while end < len(row_input) and row_input[end] != ' ':
         end += 1
+
+    # Check to see if this will knock our own marble off
+    if end == len(row_input) and row_input[end - 1] == row_input[start]:
+        return False
+
     # If our end is the edge, we know a marble is being pushed off.
     if end == len(row_input):
         end -= 1
+    temp_row = row_input[:]
     cur = start
     for i in range(start + 1, end + 1):
         temp_row[i] = row_input[cur]
@@ -58,20 +66,18 @@ def shift(row_input, start):
     for i in range(len(temp_row)):
         row_input[i] = temp_row[i]
     print(F'   ({start}, {end}) {temp_row}')
+    return True
 
 
 if __name__ == '__main__':
-
-
     starting_row = ['W', 'W', ' ', 'R', ' ', 'B', 'B']
     print(f'Original: {starting_row}')
-    shift(starting_row, 0)
-    shift(starting_row, 1)
-    shift(starting_row, 2)
-    shift(starting_row, 3)
-    shift(starting_row, 4)
-
-
+    print(shift(starting_row, 0))
+    print(shift(starting_row, 1))
+    print(shift(starting_row, 2))
+    print(shift(starting_row, 3))
+    print(shift(starting_row, 4))
+    print(shift(starting_row, 5))
 
     # shift(1, [' ', 'W', 'W', 'R', ' ', 'B', 'B'])
     # shift(2, [' ', ' ', 'W', 'W', 'R', 'B', 'B'])
