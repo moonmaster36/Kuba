@@ -240,7 +240,7 @@ class Kuba:
             start = coords[1]
             row_copy = copy.deepcopy(self.board[row_number])
             row_copy.reverse()
-            new_start = self.COL_RANGE - 1 - start                        # Determine starting point in reversed row
+            new_start = self.COL_RANGE - 1 - start  # Determine starting point in reversed row
             successful_left_move = self.move_right(row_copy, new_start, current_player)
 
             if not successful_left_move:
@@ -251,6 +251,33 @@ class Kuba:
             # Copy updated row onto game board.
             for i in range(len(row_copy)):
                 self.board[row_number][i] = row_copy[i]
+
+        # BACKWARD MOVEMENT ONLY
+        elif direction == 'B':
+            # Backward movement is accomplished by copying the column then feeding the column into movement_right
+            row_number = coords[0]
+            col_number = coords[1]
+            # Iterate and copy column
+            column_to_modify = []
+            for i in range(self.ROW_RANGE):
+                column_to_modify.append(self.board[i][col_number])
+            print(f'original column: {column_to_modify}')
+
+            # Calculate starting position. Start is row of pushed marble.
+            start = coords[0]
+            print(f'start = {start}')
+
+            # Feed into move_right
+            successful_backward_move = self.move_right(column_to_modify, start, current_player)
+            print(F'modified column: {column_to_modify}')
+
+            if not successful_backward_move:
+                # Return false if player tried to push their own marble off.
+                return False
+
+            # Transfer list modified by move_right onto game board.
+            for i in range(self.ROW_RANGE):
+                self.board[i][col_number] = column_to_modify[i]
 
         # Assume move was valid, switch current turn for next current_turn
         if self.p1.get_name() == playername:
@@ -336,25 +363,25 @@ if __name__ == '__main__':
     game.showBoard()
     game.set_turn('p1')
 
-    print(f"3.make_move = {game.make_move('p1', (2, 1), 'B')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"4.make_move = {game.make_move('p1', (3, 1), 'B')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"5.make_move = {game.make_move('p1', (4, 1), 'B')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    # 6 & 7 try to push our own marble off
-    print(f"6.make_move = {game.make_move('p1', (5, 1), 'B')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"7.make_move = {game.make_move('p1', (6, 1), 'B')}")
-    game.showBoard()
-    game.set_turn('p1')
+    # print(f"3.make_move = {game.make_move('p1', (2, 1), 'B')}")
+    # game.showBoard()
+    # game.set_turn('p1')
+    #
+    # print(f"4.make_move = {game.make_move('p1', (3, 1), 'B')}")
+    # game.showBoard()
+    # game.set_turn('p1')
+    #
+    # print(f"5.make_move = {game.make_move('p1', (4, 1), 'B')}")
+    # game.showBoard()
+    # game.set_turn('p1')
+    #
+    # # 6 & 7 try to push our own marble off
+    # print(f"6.make_move = {game.make_move('p1', (5, 1), 'B')}")
+    # game.showBoard()
+    # game.set_turn('p1')
+    #
+    # print(f"7.make_move = {game.make_move('p1', (6, 1), 'B')}")
+    # game.showBoard()
+    # game.set_turn('p1')
 
     game.showGame()
