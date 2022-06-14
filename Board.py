@@ -175,11 +175,11 @@ class Kuba:
     def validate_move(self, playername: str, coords: tuple, direction: str) -> bool:
         """Validates a move"""
         # Verify that the player is allowed to move the chosen marble.
-        print(F'{playername} attempting to move {coords} {direction}')
-        print(F'marble @ {coords} = {self.get_marble(coords)}')
+        # print(F'{playername} attempting to move {coords} {direction}')
+        # print(F'marble @ {coords} = {self.get_marble(coords)}')
         candidate_marble = self.get_marble(coords)
         candidate_player = self.get_player(playername)
-        print(f'candidate_marble = {candidate_marble}\ncandidate_player = {candidate_player.get_name()}')
+        # print(f'candidate_marble = {candidate_marble}\ncandidate_player = {candidate_player.get_name()}')
         if candidate_marble != candidate_player.get_marble_color():
             return False
 
@@ -189,9 +189,9 @@ class Kuba:
 
         # Check for space to push.
         opposite_marble = self.get_opposite_marble(coords, direction)
-        print(f'opposite_marble = {opposite_marble}')
+        # print(f'opposite_marble = {opposite_marble}')
         # Pushing from edge
-        if opposite_marble:
+        if opposite_marble == 'W' or opposite_marble == 'B' or opposite_marble == 'R':
             return False
 
         # Check if move will push player's own marble off
@@ -200,10 +200,9 @@ class Kuba:
         return True
 
     def make_move(self, playername: str, coords: tuple, direction: str) -> bool:
-        print(F'{playername} attempting to move {coords} {direction}')
-        print(F'marble @ {coords} = {self.get_marble(coords)}')
+        # print(F'{playername} attempting to move {coords} {direction}')
+        # print(F'marble @ {coords} = {self.get_marble(coords)}')
         valid = self.validate_move(playername, coords, direction)
-        print(F'valid = {valid}')
         if not valid:
             return False
         # Assuming move is valid, so switch current turn for next current_turn
@@ -218,15 +217,9 @@ if __name__ == '__main__':
     game = Kuba(('p1', 'W'), ('p2', 'B'))
     game.setupBoard()
     game.showBoard()
-    # game.showGame()
 
-    move = game.validate_move('p1', (1, 1), 'F')
-    print(F'move = {move}')
-    # move = game.validate_move('p1', (1, 1), 'F')
-    # print(f'move = {move}')
-    # # print(game.make_move('p2', (2, 2), 'R'))
-    # board = game.get_board()
-    # board[0][2] = 'R'
-    # board[2][0] = 'R'
-    # game.showBoard()
-    # print(game.get_opposite_marble((0, 0), 'F'))
+    # Implementing right move.
+    print(f"make_move = {game.make_move('p1', (0, 0), 'R')}")
+
+    game.showBoard()
+
