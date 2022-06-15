@@ -217,6 +217,54 @@ class Kuba:
 
         return True
 
+    def move_right(self, row_input, start, current_player):
+        """
+        - Push marbles at start in row_input to the right.
+        - Determines number of marbles affected by move,
+            then shifts the marbles over.
+        - If player attempts to push own marble off, the
+            move is abandoned and returns False
+        - Opponent marbles on edge of board are pushed off,
+            marble count is updated at end of function.
+        - Red (neutral) marbles pushed off board are captured by the current_player.
+            Captured count is updated immediately after a red marble is pushed off.
+        :param row_input: row in board to shift
+        :param start: marble being pushed
+        :param current_player: player pushing marble
+        :return: True if successful
+        :return: False if player tries to knock their own marble off.
+        """
+        # Determine number of marbles to move
+        end = start
+        while end < len(row_input) and row_input[end] != ' ':
+            end += 1
+
+        # Check to see if this will knock our own marble off
+        if end == len(row_input) and row_input[end - 1] == row_input[start]:
+            return False
+
+        # If our end is the edge, we know a marble is being pushed off.
+        if end == len(row_input):
+            end -= 1
+            # Determine if a red marble will be pushed off.
+            if row_input[end] == 'R':
+                current_player.increment_captured_count(1)
+
+        # Shift marbles over
+        # temp_row = row_input[:]
+        temp_row = copy.deepcopy(row_input)
+        cur = start
+        for i in range(start + 1, end + 1):
+            temp_row[i] = row_input[cur]
+            cur += 1
+        temp_row[start] = ' '
+
+        # Copy temp_row into row_input
+        for i in range(len(temp_row)):
+            row_input[i] = temp_row[i]
+        print(F'   ({start}, {end}) {temp_row}')
+        return True
+
     def make_move(self, playername: str, coords: tuple, direction: str) -> bool:
         valid = self.validate_move(playername, coords, direction)
         if not valid:
@@ -298,54 +346,6 @@ class Kuba:
             self.p1.set_marble_count(self.black_marbles)
             self.p2.set_marble_count(self.white_marbles)
 
-        return True
-
-    def move_right(self, row_input, start, current_player):
-        """
-        - Push marbles at start in row_input to the right.
-        - Determines number of marbles affected by move,
-            then shifts the marbles over.
-        - If player attempts to push own marble off, the
-            move is abandoned and returns False
-        - Opponent marbles on edge of board are pushed off,
-            marble count is updated at end of function.
-        - Red (neutral) marbles pushed off board are captured by the current_player.
-            Captured count is updated immediately after a red marble is pushed off.
-        :param row_input: row in board to shift
-        :param start: marble being pushed
-        :param current_player: player pushing marble
-        :return: True if successful
-        :return: False if player tries to knock their own marble off.
-        """
-        # Determine number of marbles to move
-        end = start
-        while end < len(row_input) and row_input[end] != ' ':
-            end += 1
-
-        # Check to see if this will knock our own marble off
-        if end == len(row_input) and row_input[end - 1] == row_input[start]:
-            return False
-
-        # If our end is the edge, we know a marble is being pushed off.
-        if end == len(row_input):
-            end -= 1
-            # Determine if a red marble will be pushed off.
-            if row_input[end] == 'R':
-                current_player.increment_captured_count(1)
-
-        # Shift marbles over
-        # temp_row = row_input[:]
-        temp_row = copy.deepcopy(row_input)
-        cur = start
-        for i in range(start + 1, end + 1):
-            temp_row[i] = row_input[cur]
-            cur += 1
-        temp_row[start] = ' '
-
-        # Copy temp_row into row_input
-        for i in range(len(temp_row)):
-            row_input[i] = temp_row[i]
-        print(F'   ({start}, {end}) {temp_row}')
         return True
 
 
