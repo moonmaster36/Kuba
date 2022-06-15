@@ -379,6 +379,8 @@ class Kuba:
         if opponent_player.get_marble_count() == 0:  # Opponent has no marbles
             self.winner = current_player.get_name()
 
+        # Scan board to determine if opponent has any remaining moves.
+
         self.current_turn = opponent_player.get_name()
         return True
 
