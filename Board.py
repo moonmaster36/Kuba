@@ -262,7 +262,6 @@ class Kuba:
         # Copy temp_row into row_input
         for i in range(len(temp_row)):
             row_input[i] = temp_row[i]
-        print(F'   ({start}, {end}) {temp_row}')
         return True
 
     def make_move(self, playername: str, coords: tuple, direction: str) -> bool:
@@ -271,92 +270,64 @@ class Kuba:
             return False
 
         current_player = self.get_player(playername)
-        # RIGHT MOVEMENT ONLY
         if direction == 'R':
             row_number = coords[0]
-            start = coords[1]
-            successful_right_move = self.move_right(self.board[row_number], start, current_player)
-
-            if not successful_right_move:
-                # Return false if player tried to push their own marble off.
+            
+            successful_right_move = self.move_right(self.board[row_number], coords[1], current_player)
+            if not successful_right_move:        # Return false if player tried to push their own marble off.
                 return False
 
-        # LEFT MOVEMENT ONLY
         elif direction == 'L':
             # Left movement is accomplished by reversing the row and using move_right function
             row_number = coords[0]
             start = coords[1]
             row_copy = copy.deepcopy(self.board[row_number])
             row_copy.reverse()
-            new_start = self.COL_RANGE - 1 - start  # Determine starting point in reversed row
-            successful_left_move = self.move_right(row_copy, new_start, current_player)
 
-            if not successful_left_move:
-                # Return false if player tried to push their own marble off.
+            successful_left_move = self.move_right(row_copy, self.COL_RANGE - 1 - start, current_player)
+            if not successful_left_move:        # Return false if player tried to push their own marble off.
                 return False
 
+            # Reverse and copy transfer updated row onto game board.
             row_copy.reverse()
-            # Copy updated row onto game board.
             for i in range(len(row_copy)):
                 self.board[row_number][i] = row_copy[i]
 
-        # BACKWARD MOVEMENT ONLY
         elif direction == 'B':
             # Backward movement is accomplished by copying the column then feeding the column into movement_right
-            row_number = coords[0]
             col_number = coords[1]
             # Iterate and copy column
             column_to_modify = []
             for i in range(self.ROW_RANGE):
                 column_to_modify.append(self.board[i][col_number])
-            print(f'original column: {column_to_modify}')
 
-            # Calculate starting position. Start is row of pushed marble.
-            start = coords[0]
-            print(f'start = {start}')
-
-            # Feed into move_right
-            successful_backward_move = self.move_right(column_to_modify, start, current_player)
-            print(F'modified column: {column_to_modify}')
-
-            if not successful_backward_move:
-                # Return false if player tried to push their own marble off.
+            successful_backward_move = self.move_right(column_to_modify, coords[0], current_player)
+            if not successful_backward_move:     # Return false if player tried to push their own marble off.
                 return False
 
             # Transfer list modified by move_right onto game board.
             for i in range(self.ROW_RANGE):
                 self.board[i][col_number] = column_to_modify[i]
 
-        # FORWARD MOVEMENT ONLY
         elif direction == 'F':
             # Backward movement is accomplished by copying the column then feeding the column into movement_right
-            row_number = coords[0]
             col_number = coords[1]
             # Iterate and copy column
             column_to_modify = []
             for i in range(self.ROW_RANGE):
                 column_to_modify.append(self.board[i][col_number])
-            print(f'original column: {column_to_modify}')
-
-            # Calculate starting position. Start is row of pushed marble.
-            start = (self.COL_RANGE - 1) - coords[0]
-            print(f'start = {start}')
 
             # Reverse before feeding into move_right (because moving forward is opposite of backwards)
             column_to_modify.reverse()
 
-            # Feed into move_right
-            successful_forward_move = self.move_right(column_to_modify, start, current_player)
-            print(F'modified column: {column_to_modify}')
+            successful_forward_move = self.move_right(column_to_modify, (self.COL_RANGE - 1) - coords[0],
+                                                      current_player)
+
+            if not successful_forward_move:  # Return false if player tried to push their own marble off.
+                return False
 
             # Reverse then transfer modified column onto game board.
             column_to_modify.reverse()
-
-            if not successful_forward_move:
-                # Return false if player tried to push their own marble off.
-                return False
-
-            # Transfer list modified by move_right onto game board.
             for i in range(self.ROW_RANGE):
                 self.board[i][col_number] = column_to_modify[i]
 
@@ -415,7 +386,6 @@ if __name__ == '__main__':
     print(f"7.make_move = {game.make_move('p1', (0, 5), 'F')}")
     game.showBoard()
     game.set_turn('p1')
-
 
     # # # 6 & 7 try to push our own marble off
     # print(f"6.make_move = {game.make_move('p1', (5, 1), 'B')}")
