@@ -251,7 +251,6 @@ class Kuba:
                 current_player.increment_captured_count(1)
 
         # Shift marbles over
-        # temp_row = row_input[:]
         temp_row = copy.deepcopy(row_input)
         cur = start
         for i in range(start + 1, end + 1):
@@ -272,7 +271,7 @@ class Kuba:
         current_player = self.get_player(playername)
         if direction == 'R':
             row_number = coords[0]
-            
+
             successful_right_move = self.move_right(self.board[row_number], coords[1], current_player)
             if not successful_right_move:        # Return false if player tried to push their own marble off.
                 return False
