@@ -106,6 +106,9 @@ class Kuba:
     def set_turn(self, x):
         self.current_turn = x
 
+    def set_winner(self, x):
+        self.winner = x
+
     def get_board(self):
         return self.board
 
@@ -113,10 +116,7 @@ class Kuba:
         return self.current_turn
 
     def get_winner(self):
-        if self.winner:
-            return self.winner.get_name()
-        else:
-            return None
+        return self.winner
 
     def get_captured(self, playername):
         if self.p1.get_name() == playername:
@@ -197,11 +197,31 @@ class Kuba:
         :param direction: direction to push marble in
         :return:
         """
+        # Check if game has already been won
+        if self.get_winner():
+            print(F'{self.winner} already won!')
+            return False
+
+        # Check if row is valid.
+        if coords[0] < 0 or coords[0] >= self.ROW_RANGE:
+            print(f'Invalid coordinates! coords: ({coords[0]}, {coords[1]})')
+            return False
+
+        # Check if column is valid.
+        if coords[1] < 0 or coords[1] >= self.COL_RANGE:
+            print(f'Invalid coordinates! coords: ({coords[0]}, {coords[1]})')
+            return False
+
         # Verify that the player is allowed to move the chosen marble.
         candidate_marble = self.get_marble(coords)
         candidate_player = self.get_player(playername)
 
-        if candidate_marble != candidate_player.get_marble_color(): # This also tests if marble is out of bounds.
+        if candidate_marble == 'R':
+            print(f"You cannot move Red marbles! coords: ({coords[0]}, {coords[1]})")
+            return False
+
+        if candidate_marble != candidate_player.get_marble_color():  # This also tests if marble is out of bounds.
+            print(F"You cannot move your opponent's marble! coords: ({coords[0]}, {coords[1]})")
             return False
 
         # Move has been made and it is not playername's turn
@@ -358,7 +378,7 @@ if __name__ == '__main__':
     game.showBoard()
 
     # Forward movement. White lower right all the way up.
-    print(f"1.make_move = {game.make_move('p1', (-1, 5), 'F')}")
+    print(f"1.make_move = {game.make_move('p1', (3, 3), 'F')}")
     game.showBoard()
     game.set_turn('p1')
 
