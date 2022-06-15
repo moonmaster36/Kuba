@@ -115,5 +115,36 @@ class TestMakeMove(unittest.TestCase):
         pass
 
     def test_move_forward(self):
-
+        # game = Kuba(('p1', 'W'), ('p2', 'B'))
+        # game.setupBoard()
+        # game.showBoard()
+        #
+        # # Forward movement. White lower right all the way up.
+        # print(f"1.make_move = {game.make_move('p1', (6, 5), 'F')}")
+        # game.showBoard()
+        # game.set_turn('p1')
+        #
+        # print(f"2.make_move = {game.make_move('p1', (5, 5), 'F')}")
+        # game.showBoard()
+        # game.set_turn('p1')
+        #
+        # print(f"3.make_move = {game.make_move('p1', (4, 5), 'F')}")
+        # game.showBoard()
+        # game.set_turn('p1')
+        #
+        # print(f"4.make_move = {game.make_move('p1', (3, 5), 'F')}")
+        # game.showBoard()
+        # game.set_turn('p1')
+        #
+        # print(f"5.make_move = {game.make_move('p1', (2, 5), 'F')}")
+        # game.showBoard()
+        # game.set_turn('p1')
+        #
+        # print(f"6.make_move = {game.make_move('p1', (1, 5), 'F')}")
+        # game.showBoard()
+        # game.set_turn('p1')
+        #
+        # print(f"7.make_move = {game.make_move('p1', (0, 5), 'F')}")
+        # game.showBoard()
+        # game.set_turn('p1')
         pass
