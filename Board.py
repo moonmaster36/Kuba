@@ -387,66 +387,35 @@ if __name__ == '__main__':
     game.setupBoard()
     game.showBoard()
 
-    # Move right then down
-    print(f"1.make_move = {game.make_move('p1', (0, 0), 'R')}")
+    # Forward movement. White lower right all the way up.
+    print(f"1.make_move = {game.make_move('p1', (6, 5), 'F')}")
     game.showBoard()
     game.set_turn('p1')
 
-    print(f"2.make_move = {game.make_move('p1', (1, 0), 'R')}")
+    print(f"2.make_move = {game.make_move('p1', (5, 5), 'F')}")
     game.showBoard()
     game.set_turn('p1')
 
-    print(f"3.make_move = {game.make_move('p1', (0, 2), 'B')}")
+    print(f"3.make_move = {game.make_move('p1', (4, 5), 'F')}")
     game.showBoard()
     game.set_turn('p1')
 
-    print(f"4.make_move = {game.make_move('p1', (1, 2), 'B')}")
+    print(f"4.make_move = {game.make_move('p1', (3, 5), 'F')}")
     game.showBoard()
     game.set_turn('p1')
 
-    print(f"5.make_move = {game.make_move('p1', (2, 2), 'B')}")
+    print(f"5.make_move = {game.make_move('p1', (2, 5), 'F')}")
     game.showBoard()
     game.set_turn('p1')
 
-    print(f"6.make_move = {game.make_move('p1', (3, 2), 'B')}")
+    print(f"6.make_move = {game.make_move('p1', (1, 5), 'F')}")
     game.showBoard()
     game.set_turn('p1')
 
-    print(f"7.make_move = {game.make_move('p1', (4, 2), 'B')}")
+    print(f"7.make_move = {game.make_move('p1', (0, 5), 'F')}")
     game.showBoard()
     game.set_turn('p1')
 
-    # Push left
-    print(f"8.make_move = {game.make_move('p1', (5, 2), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"9.make_move = {game.make_move('p1', (5, 6), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"10.make_move = {game.make_move('p1', (5, 5), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"11.make_move = {game.make_move('p1', (5, 4), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    # purposelly invalid?
-    print(f"12.make_move = {game.make_move('p1', (5, 3), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    # Forward
-    print(f"13.make_move = {game.make_move('p1', (6, 2), 'F')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    # Forward
-    print(f"14.make_move = {game.make_move('p1', (5, 2), 'F')}")
-    game.showBoard()
-    game.set_turn('p1')
 
     # # # 6 & 7 try to push our own marble off
     # print(f"6.make_move = {game.make_move('p1', (5, 1), 'B')}")
