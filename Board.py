@@ -1,5 +1,7 @@
 import copy
 
+import current as current
+
 
 class Player:
     def __init__(self, name, marble_color):
@@ -350,12 +352,6 @@ class Kuba:
             for i in range(self.ROW_RANGE):
                 self.board[i][col_number] = column_to_modify[i]
 
-        # Assume move was valid, switch current turn for next current_turn
-        if self.p1.get_name() == playername:
-            self.current_turn = self.p2.get_name()
-        else:
-            self.current_turn = self.p1.get_name()
-
         # Update all marble counts
         new_counts = self.get_marble_count()
         self.white_marbles = new_counts[0]
@@ -369,6 +365,21 @@ class Kuba:
             self.p1.set_marble_count(self.black_marbles)
             self.p2.set_marble_count(self.white_marbles)
 
+        # Determine who the opponent player is.
+        opponent_player = None
+        if self.p1.get_name() == current_player.get_name():
+            opponent_player = self.p2
+        else:
+            opponent_player = self.p1
+
+        # Check if game has been won
+        if current_player.get_captured_count() == 7 and self.red_marbles <= 6:
+            self.winner = current_player.get_name()
+
+        if opponent_player.get_marble_count() == 0:  # Opponent has no marbles
+            self.winner = current_player.get_name()
+
+        self.current_turn = opponent_player.get_name()
         return True
 
 
