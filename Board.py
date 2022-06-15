@@ -327,6 +327,39 @@ class Kuba:
             for i in range(self.ROW_RANGE):
                 self.board[i][col_number] = column_to_modify[i]
 
+        # FORWARD MOVEMENT ONLY
+        elif direction == 'F':
+            # Backward movement is accomplished by copying the column then feeding the column into movement_right
+            row_number = coords[0]
+            col_number = coords[1]
+            # Iterate and copy column
+            column_to_modify = []
+            for i in range(self.ROW_RANGE):
+                column_to_modify.append(self.board[i][col_number])
+            print(f'original column: {column_to_modify}')
+
+            # Calculate starting position. Start is row of pushed marble.
+            start = (self.COL_RANGE - 1) - coords[0]
+            print(f'start = {start}')
+
+            # Reverse before feeding into move_right (because moving forward is opposite of backwards)
+            column_to_modify.reverse()
+
+            # Feed into move_right
+            successful_forward_move = self.move_right(column_to_modify, start, current_player)
+            print(F'modified column: {column_to_modify}')
+
+            # Reverse then transfer modified column onto game board.
+            column_to_modify.reverse()
+
+            if not successful_forward_move:
+                # Return false if player tried to push their own marble off.
+                return False
+
+            # Transfer list modified by move_right onto game board.
+            for i in range(self.ROW_RANGE):
+                self.board[i][col_number] = column_to_modify[i]
+
         # Assume move was valid, switch current turn for next current_turn
         if self.p1.get_name() == playername:
             self.current_turn = self.p2.get_name()
