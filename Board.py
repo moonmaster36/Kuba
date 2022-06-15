@@ -44,59 +44,6 @@ class Kuba:
         self.current_turn = None
         self.winner = None
 
-    def set_turn(self, x):
-        self.current_turn = x
-
-    def get_board(self):
-        return self.board
-
-    def get_current_turn(self):
-        return self.current_turn
-
-    def get_winner(self):
-        if self.winner:
-            return self.winner.get_name()
-        else:
-            return None
-
-    def get_captured(self, playername):
-        if self.p1.get_name() == playername:
-            return self.p1.get_captured_count()
-        else:
-            return self.p2.get_captured_count()
-
-    def get_marble(self, coords: tuple):
-        """Return the marble at the given position"""
-        row = coords[0]
-        col = coords[1]
-        # Determine if coords are valid
-        if 0 <= row < self.ROW_RANGE and 0 <= col < self.COL_RANGE:
-            return self.board[row][col]
-
-    def get_marble_count(self):
-        white, black, red = 0, 0, 0
-
-        for i in range(self.COL_RANGE):
-            for j in range(self.ROW_RANGE):
-                current_marble = self.board[i][j]
-                if current_marble == 'W':
-                    white += 1
-                elif current_marble == 'B':
-                    black += 1
-                elif current_marble == 'R':
-                    red += 1
-        return white, black, red
-
-    def showBoard(self):
-        for i in range(self.COL_RANGE):
-            print(self.board[i])
-        print()
-
-    def clearBoard(self):
-        for i in range(self.COL_RANGE):
-            self.board[i].clear()
-        self.board = [[' ' for _ in range(self.ROW_RANGE)] for _ in range(self.COL_RANGE)]
-
     def showGame(self):
         """Prints various details about the game."""
         print(F'-------- Game Details --------')
@@ -156,6 +103,59 @@ class Kuba:
         self.board[4][4] = 'R'
         self.board[5][3] = 'R'
 
+    def set_turn(self, x):
+        self.current_turn = x
+
+    def get_board(self):
+        return self.board
+
+    def get_current_turn(self):
+        return self.current_turn
+
+    def get_winner(self):
+        if self.winner:
+            return self.winner.get_name()
+        else:
+            return None
+
+    def get_captured(self, playername):
+        if self.p1.get_name() == playername:
+            return self.p1.get_captured_count()
+        else:
+            return self.p2.get_captured_count()
+
+    def get_marble(self, coords: tuple):
+        """Return the marble at the given position"""
+        row = coords[0]
+        col = coords[1]
+        # Determine if coords are valid
+        if 0 <= row < self.ROW_RANGE and 0 <= col < self.COL_RANGE:
+            return self.board[row][col]
+
+    def get_marble_count(self):
+        white, black, red = 0, 0, 0
+
+        for i in range(self.COL_RANGE):
+            for j in range(self.ROW_RANGE):
+                current_marble = self.board[i][j]
+                if current_marble == 'W':
+                    white += 1
+                elif current_marble == 'B':
+                    black += 1
+                elif current_marble == 'R':
+                    red += 1
+        return white, black, red
+
+    def showBoard(self):
+        for i in range(self.COL_RANGE):
+            print(self.board[i])
+        print()
+
+    def clearBoard(self):
+        for i in range(self.COL_RANGE):
+            self.board[i].clear()
+        self.board = [[' ' for _ in range(self.ROW_RANGE)] for _ in range(self.COL_RANGE)]
+
     def get_player(self, playername):
         """Returns the player object given a player name."""
         if self.p1.get_name() == playername:
@@ -201,7 +201,7 @@ class Kuba:
         candidate_marble = self.get_marble(coords)
         candidate_player = self.get_player(playername)
 
-        if candidate_marble != candidate_player.get_marble_color():
+        if candidate_marble != candidate_player.get_marble_color(): # This also tests if marble is out of bounds.
             return False
 
         # Move has been made and it is not playername's turn
@@ -273,7 +273,7 @@ class Kuba:
             row_number = coords[0]
 
             successful_right_move = self.move_right(self.board[row_number], coords[1], current_player)
-            if not successful_right_move:        # Return false if player tried to push their own marble off.
+            if not successful_right_move:  # Return false if player tried to push their own marble off.
                 return False
 
         elif direction == 'L':
@@ -284,7 +284,7 @@ class Kuba:
             row_copy.reverse()
 
             successful_left_move = self.move_right(row_copy, self.COL_RANGE - 1 - start, current_player)
-            if not successful_left_move:        # Return false if player tried to push their own marble off.
+            if not successful_left_move:  # Return false if player tried to push their own marble off.
                 return False
 
             # Reverse and copy transfer updated row onto game board.
@@ -301,7 +301,7 @@ class Kuba:
                 column_to_modify.append(self.board[i][col_number])
 
             successful_backward_move = self.move_right(column_to_modify, coords[0], current_player)
-            if not successful_backward_move:     # Return false if player tried to push their own marble off.
+            if not successful_backward_move:  # Return false if player tried to push their own marble off.
                 return False
 
             # Transfer list modified by move_right onto game board.
@@ -358,41 +358,8 @@ if __name__ == '__main__':
     game.showBoard()
 
     # Forward movement. White lower right all the way up.
-    print(f"1.make_move = {game.make_move('p1', (6, 5), 'F')}")
+    print(f"1.make_move = {game.make_move('p1', (-1, 5), 'F')}")
     game.showBoard()
     game.set_turn('p1')
-
-    print(f"2.make_move = {game.make_move('p1', (5, 5), 'F')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"3.make_move = {game.make_move('p1', (4, 5), 'F')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"4.make_move = {game.make_move('p1', (3, 5), 'F')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"5.make_move = {game.make_move('p1', (2, 5), 'F')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"6.make_move = {game.make_move('p1', (1, 5), 'F')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"7.make_move = {game.make_move('p1', (0, 5), 'F')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    # # # 6 & 7 try to push our own marble off
-    # print(f"6.make_move = {game.make_move('p1', (5, 1), 'B')}")
-    # game.showBoard()
-    # game.set_turn('p1')
-    #
-    # print(f"7.make_move = {game.make_move('p1', (6, 1), 'B')}")
-    # game.showBoard()
-    # game.set_turn('p1')
 
     game.showGame()
