@@ -433,12 +433,18 @@ if __name__ == '__main__':
     game.showBoard()
     game.set_turn('p1')
 
+    # purposelly invalid?
     print(f"12.make_move = {game.make_move('p1', (5, 3), 'L')}")
     game.showBoard()
     game.set_turn('p1')
 
-    # Back up
+    # Forward
     print(f"13.make_move = {game.make_move('p1', (6, 2), 'F')}")
+    game.showBoard()
+    game.set_turn('p1')
+
+    # Forward
+    print(f"14.make_move = {game.make_move('p1', (5, 2), 'F')}")
     game.showBoard()
     game.set_turn('p1')
 
