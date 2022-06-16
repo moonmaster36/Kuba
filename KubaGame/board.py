@@ -1,7 +1,12 @@
 import pygame
-from kuba.player import Player
-from kuba.constants import RED, WHITE, BLACK, BLUE, GREY, SQUARE_SIZE, ROWS, COLS
+from KubaGame.player import Player
+from KubaGame.constants import RED, WHITE, BLACK, BLUE, GREY, SQUARE_SIZE, ROWS, COLS
+
+
 class Board:
+    PADDING = 15
+    OUTLINE = 2
+
     def __init__(self, p1: tuple, p2: tuple):
         self.p1 = Player(p1[0], p1[1])
         self.p2 = Player(p2[0], p2[1])
@@ -10,6 +15,10 @@ class Board:
         self.red_marbles = 13
         self.white_marbles = self.black_marbles = 8
         self.current_turn = None
+        if self.p1.get_marble_color() == 'W':
+            self.current_turn = self.p1
+        else:
+            self.current_turn = self.p2
         self.winner = None
         self.setupBoard()
 
@@ -17,7 +26,28 @@ class Board:
         win.fill(BLACK)
         for row in range(ROWS):
             for col in range(COLS):
-                pygame.draw.rect(win, GREY, )
+                pygame.draw.rect(win, GREY, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+
+    def draw_marble(self, win, coords):
+        radius = SQUARE_SIZE // 2 - self.PADDING
+        x = coords[1]
+        y = coords[0]
+        marble = self.get_marble(coords)
+        pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
+        if marble == 'W':
+            pygame.draw.circle(win, WHITE, (x, y), radius)
+        if marble == 'B':
+            pygame.draw.circle(win, BLACK, (x, y), radius)
+        if marble == 'R':
+            pygame.draw.circle(win, RED, (x, y), radius)
+
+    def draw(self, win):
+        self.draw_squares(win)
+        for row in range(ROWS):
+            for col in range(COLS):
+                marble = self.get_marble((row, col))
+                if marble != " ":
+                    self.draw_marble(win, marble)
 
     def showGame(self):
         """Prints various details about the game."""
