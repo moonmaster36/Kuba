@@ -9,6 +9,19 @@ class Player:
         self.marble_color = marble_color
         self.marble_count = 8
         self.captured_count = 0
+        self.board_state_after_move = None
+
+    def __repr__(self):
+        return f"{self.name} '{self.marble_color}'"
+
+    def showBoardStateAfterMove(self):
+        print(F"*** {self.name} board_state_after_move: ***")
+        if self.board_state_after_move:
+            for row in range(len(self.board_state_after_move)):
+                print(self.board_state_after_move[row])
+            print()
+        else:
+            print(f'board_copy: {self.board_state_after_move}\n')
 
     def get_name(self):
         return self.name
@@ -22,8 +35,14 @@ class Player:
     def get_captured_count(self):
         return self.captured_count
 
+    def get_board_state_after_move(self):
+        return self.board_state_after_move
+
     def set_marble_count(self, x):
         self.marble_count = x
+
+    def set_board_state_after_move(self, x):
+        self.board_state_after_move = x
 
     def decrement_marble_count(self, x):
         self.marble_count -= x
@@ -40,6 +59,7 @@ class Kuba:
         self.p1 = Player(p1[0], p1[1])
         self.p2 = Player(p2[0], p2[1])
         self.board = [[' ' for _ in range(self.ROW_RANGE)] for _ in range(self.COL_RANGE)]
+        self.board_copy = None
         self.red_marbles = 13
         self.white_marbles = 8
         self.black_marbles = 8
@@ -149,6 +169,7 @@ class Kuba:
         return white, black, red
 
     def showBoard(self):
+        print(F"** BOARD **")
         for i in range(self.COL_RANGE):
             print(self.board[i])
         print()
@@ -204,6 +225,11 @@ class Kuba:
             print(F'{self.winner} already won!')
             return False
 
+        # Check if it is playername's turn
+        if self.get_current_turn() and self.get_current_turn() != playername:
+            print(F"It is not {playername}'s turn!")
+            return False
+
         # Check if row is valid.
         if coords[0] < 0 or coords[0] >= self.ROW_RANGE:
             print(f'Invalid coordinates! coords: ({coords[0]}, {coords[1]})')
@@ -218,6 +244,10 @@ class Kuba:
         candidate_marble = self.get_marble(coords)
         candidate_player = self.get_player(playername)
 
+        if candidate_marble == ' ':
+            print(f"No marble present at that space! coords: ({coords[0]}, {coords[1]})")
+            return False
+
         if candidate_marble == 'R':
             print(f"You cannot move Red marbles! coords: ({coords[0]}, {coords[1]})")
             return False
@@ -226,15 +256,12 @@ class Kuba:
             print(F"You cannot move your opponent's marble! coords: ({coords[0]}, {coords[1]})")
             return False
 
-        # Move has been made and it is not playername's turn
-        if self.get_current_turn() and self.get_current_turn() != playername:
-            return False
-
         # Check for space to push.
         opposite_marble = self.get_opposite_marble(coords, direction)
 
-        # Pushing from edge
+        # Check if marble has space to move (i.e., that marble is not in middle of marble chain.)
         if opposite_marble == 'W' or opposite_marble == 'B' or opposite_marble == 'R':
+            print(F'{candidate_player} attempted to push marble in chain: {coords} {direction}')
             return False
 
         return True
@@ -298,24 +325,20 @@ class Kuba:
         return True
 
     def make_move(self, playername: str, coords: tuple, direction: str) -> bool:
+        current_player = self.get_player(playername)
+        print(
+            F'{current_player} attempts to move {coords} {direction}')
+
         # Before doing anything, check if the move is even valid.
         valid = self.validate_move(playername, coords, direction)
         if not valid:
             return False
 
-        current_player = self.get_player(playername)
-
-        # Ko Rule enforcement
-        # Store marble counts.
-        original_board = self.get_marble_count()
-        # Store current_player's original captured marble count to restore game state if Ko Rule is violated.
-        # Take snapshot of board to enforce Ko Rule
-        board_pre_move = None
-
         if direction == 'R':
             row_number = coords[0]
             successful_right_move = self.move_right(self.board[row_number], coords[1], current_player)
             if not successful_right_move:  # Return false if player tried to push their own marble off.
+                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 return False
 
         elif direction == 'L':
@@ -328,6 +351,7 @@ class Kuba:
 
             successful_left_move = self.move_right(row_copy, self.COL_RANGE - 1 - start, current_player)
             if not successful_left_move:  # Return false if player tried to push their own marble off.
+                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 return False
 
             # Reverse and copy transfer updated row onto game board.
@@ -345,6 +369,7 @@ class Kuba:
 
             successful_backward_move = self.move_right(column_to_modify, coords[0], current_player)
             if not successful_backward_move:  # Return false if player tried to push their own marble off.
+                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 return False
 
             # Transfer list modified by move_right onto game board.
@@ -365,6 +390,7 @@ class Kuba:
             successful_forward_move = self.move_right(column_to_modify, (self.COL_RANGE - 1) - coords[0],
                                                       current_player)
             if not successful_forward_move:  # Return false if player tried to push their own marble off.
+                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 return False
 
             # Reverse then transfer modified column onto game board.
@@ -386,11 +412,27 @@ class Kuba:
             self.p2.set_marble_count(self.white_marbles)
 
         # Determine who the opponent player is.
+        # Determine who the opponent player is.
         opponent_player = None
         if self.p1.get_name() == current_player.get_name():
             opponent_player = self.p2
         else:
             opponent_player = self.p1
+
+        # Ko Rule enforcement
+        if self.board == opponent_player.get_board_state_after_move():
+            # Restore game board to previous state
+            self.board = opponent_player.get_board_state_after_move()
+            restored_marble_count = self.get_marble_count()
+            self.white_marbles = restored_marble_count[0]
+            self.black_marbles = restored_marble_count[1]
+            self.red_marbles = restored_marble_count[2]
+
+            print(F"{current_player} violated Ko Rule {coords} {direction}")
+            return False
+
+        # After successful move, store board state in opponent_player
+        opponent_player.set_board_state_after_move([list(row) for row in self.board])
 
         # Check if game has been won
         if current_player.get_captured_count() == 7 and self.red_marbles <= 6:
@@ -400,6 +442,8 @@ class Kuba:
             self.winner = current_player.get_name()
 
         # Scan board to determine if opponent has any remaining moves.
+
+        print(F'{current_player} successfully moved {coords} {direction}')
         self.current_turn = opponent_player.get_name()
         return True
 
@@ -407,36 +451,15 @@ class Kuba:
 if __name__ == '__main__':
     game = Kuba(('p1', 'W'), ('p2', 'B'))
     game.setupBoard()
+
+    # Implementing Ko Rule Testing for Vertical Movement
+    game.make_move('p1', (0, 1), 'B')
+    game.showBoard()
+    game.make_move('p2', (6, 1), 'F')
     game.showBoard()
 
-    # Implementing left move. Moving white on (5,6) to left
-    print(f"1.make_move = {game.make_move('p1', (5, 6), 'L')}")
+    game.make_move('p1', (1, 1), 'B')  # W pushes down
     game.showBoard()
-    game.set_turn('p1')
 
-    print(f"2.make_move = {game.make_move('p1', (5, 5), 'L')}")
+    move = game.make_move('p2', (6, 1), 'F')  # B pushes forward, reversing the move W just made.
     game.showBoard()
-    game.set_turn('p1')
-
-    print(f"3.make_move = {game.make_move('p1', (5, 4), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"4.make_move = {game.make_move('p1', (5, 3), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"5.make_move = {game.make_move('p1', (5, 2), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    # 6 & 7 try to push our own marble off
-    print(f"6.make_move = {game.make_move('p1', (5, 1), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"7.make_move = {game.make_move('p1', (5, 0), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    game.showGame()
