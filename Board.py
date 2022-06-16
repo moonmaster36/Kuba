@@ -284,7 +284,8 @@ class Kuba:
                 current_player.increment_captured_count(1)
 
         # Shift marbles over
-        temp_row = copy.deepcopy(row_input)
+        # temp_row = copy.deepcopy(row_input)
+        temp_row = [x for x in row_input]
         cur = start
         for i in range(start + 1, end + 1):
             temp_row[i] = row_input[cur]
@@ -313,7 +314,6 @@ class Kuba:
 
         if direction == 'R':
             row_number = coords[0]
-
             successful_right_move = self.move_right(self.board[row_number], coords[1], current_player)
             if not successful_right_move:  # Return false if player tried to push their own marble off.
                 return False
@@ -322,7 +322,8 @@ class Kuba:
             # Left movement is accomplished by reversing the row and using move_right function
             row_number = coords[0]
             start = coords[1]
-            row_copy = copy.deepcopy(self.board[row_number])
+            # row_copy = copy.deepcopy(self.board[row_number])
+            row_copy = [x for x in self.board[row_number]]
             row_copy.reverse()
 
             successful_left_move = self.move_right(row_copy, self.COL_RANGE - 1 - start, current_player)
@@ -407,5 +408,35 @@ if __name__ == '__main__':
     game = Kuba(('p1', 'W'), ('p2', 'B'))
     game.setupBoard()
     game.showBoard()
+
+    # Implementing left move. Moving white on (5,6) to left
+    print(f"1.make_move = {game.make_move('p1', (5, 6), 'L')}")
+    game.showBoard()
+    game.set_turn('p1')
+
+    print(f"2.make_move = {game.make_move('p1', (5, 5), 'L')}")
+    game.showBoard()
+    game.set_turn('p1')
+
+    print(f"3.make_move = {game.make_move('p1', (5, 4), 'L')}")
+    game.showBoard()
+    game.set_turn('p1')
+
+    print(f"4.make_move = {game.make_move('p1', (5, 3), 'L')}")
+    game.showBoard()
+    game.set_turn('p1')
+
+    print(f"5.make_move = {game.make_move('p1', (5, 2), 'L')}")
+    game.showBoard()
+    game.set_turn('p1')
+
+    # 6 & 7 try to push our own marble off
+    print(f"6.make_move = {game.make_move('p1', (5, 1), 'L')}")
+    game.showBoard()
+    game.set_turn('p1')
+
+    print(f"7.make_move = {game.make_move('p1', (5, 0), 'L')}")
+    game.showBoard()
+    game.set_turn('p1')
 
     game.showGame()
