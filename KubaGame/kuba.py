@@ -22,23 +22,38 @@ def get_p2_from_user():
 
 class Kuba:
     def __init__(self, win):
+        # self._init()
         self.win = win
-        self.p1 = get_p1_from_user()
-        self.p2 = get_p2_from_user()
-        self.winner = None
-        self.current_turn = None
-        if self.p1.get_marble_color() == 'W':
-            self.current_turn = self.p1
-        else:
-            self.current_turn = self.p2
+        self.board = Board(("p1", "W"), ("p2", "B"))
 
-        self.selected = None
-        self.board = Board()
+    def update(self):
+        self.board.draw(self.win)
+        pygame.display.update()
 
-    # def update(self):
-    #     self.board.draw()
-    #
     # def _init(self):
     #     self.selected = None
-    #     self.board = Board()
+    #     self.board = Board(("p1", "W"), ("p2", "B"))
+        # p1 = get_p1_from_user()
+        # p2 = get_p2_from_user()
+        # self.board = Board((p1.get_name(), p1.get_marble_count()),
+        #                    (p2.get_name(), p2.get_marble_count()))
+        # self.turn = self.board.get_current_turn()
+
+    # def reset(self):
+    #     self._init()
+
+    # def select(self, row, col):
+    #     if self.selected:
+    #         result = self.board.make_move((row, col))
+    #         if not result:
+    #             self.selected = None
+    #             self.select(row, col)
     #
+    #     marble = self.board.get_marble((row, col))
+    #     if marble != " " and marble == self.turn.get_marble_color():
+    #         self.selected = marble
+    #         return True
+    #
+    #     return False
+
+

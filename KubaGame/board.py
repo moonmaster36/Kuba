@@ -47,7 +47,16 @@ class Board:
             for col in range(COLS):
                 marble = self.get_marble((row, col))
                 if marble != " ":
-                    self.draw_marble(win, marble)
+                    radius = SQUARE_SIZE // 2 - self.PADDING
+                    x = row
+                    y = col
+                    pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
+                    if marble == 'W':
+                        pygame.draw.circle(win, WHITE, (x, y), radius)
+                    if marble == 'B':
+                        pygame.draw.circle(win, BLACK, (x, y), radius)
+                    if marble == 'R':
+                        pygame.draw.circle(win, RED, (x, y), radius)
 
     def showGame(self):
         """Prints various details about the game."""
@@ -114,6 +123,14 @@ class Board:
     def set_winner(self, x):
         self.winner = x
 
+    def get_player(self, playername):
+        """Returns the player object given a player name."""
+        if self.p1.get_name() == playername:
+            return self.p1
+
+        if self.p2.get_name() == playername:
+            return self.p2
+
     def get_board(self):
         return self.board
 
@@ -161,14 +178,6 @@ class Board:
             self.board[i].clear()
         self.board = [[' ' for _ in range(ROWS)] for _ in range(COLS)]
 
-    def get_player(self, playername):
-        """Returns the player object given a player name."""
-        if self.p1.get_name() == playername:
-            return self.p1
-
-        if self.p2.get_name() == playername:
-            return self.p2
-
     def get_opposite_marble(self, coords: tuple, direction: str):
         """
         Return marble in space opposite of direction. If no marble in space opposite,
@@ -192,6 +201,17 @@ class Board:
             candidate_coords = (row, col + 1)  # Check right space
         opposite_marble = self.get_marble(candidate_coords)
         return opposite_marble
+
+    def check_for_winner(self, current_player, opponent_player) -> bool:
+        """
+        Immediately after a move has been made, determines if the player that made the
+            move has won the game.
+        :param current_player: player that just made a move.
+        :param opponent_player: opponent of current_player
+        :return: True if the player has won
+        :return: False if the player has not won
+        """
+        pass
 
     def validate_move(self, playername: str, coords: tuple, direction: str) -> bool:
         """
@@ -247,17 +267,6 @@ class Board:
             return False
 
         return True
-
-    def check_for_winner(self, current_player, opponent_player) -> bool:
-        """
-        Immediately after a move has been made, determines if the player that made the
-            move has won the game.
-        :param current_player: player that just made a move.
-        :param opponent_player: opponent of current_player
-        :return: True if the player has won
-        :return: False if the player has not won
-        """
-        pass
 
     def move_right(self, row_input, start, current_player):
         """
