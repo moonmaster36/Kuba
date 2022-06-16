@@ -1,6 +1,6 @@
 import pygame
 from KubaGame.player import Player
-from KubaGame.constants import RED, WHITE, BLACK, BLUE, GREY, SQUARE_SIZE, ROWS, COLS
+from KubaGame.constants import RED, WHITE, BLACK, GREY, SQUARE_SIZE, ROWS, COLS
 
 
 class Board:
@@ -28,35 +28,36 @@ class Board:
             for col in range(COLS):
                 pygame.draw.rect(win, GREY, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
-    def draw_marble(self, win, coords):
+    def draw_dots(self, win):
+        radius = SQUARE_SIZE // 5 - self.PADDING
+        for row in range(ROWS):
+            for col in range(COLS):
+                x = SQUARE_SIZE * col + SQUARE_SIZE // 2
+                y = SQUARE_SIZE * row + SQUARE_SIZE // 2
+                pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
+                pygame.draw.circle(win, BLACK, (x, y), radius)
+
+    def draw_marbles(self, win):
         radius = SQUARE_SIZE // 2 - self.PADDING
-        x = coords[1]
-        y = coords[0]
-        marble = self.get_marble(coords)
-        pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
-        if marble == 'W':
-            pygame.draw.circle(win, WHITE, (x, y), radius)
-        if marble == 'B':
-            pygame.draw.circle(win, BLACK, (x, y), radius)
-        if marble == 'R':
-            pygame.draw.circle(win, RED, (x, y), radius)
+        for row in range(ROWS):
+            for col in range(COLS):
+                if self.board[row][col] != ' ':
+                    x = SQUARE_SIZE * col + SQUARE_SIZE // 2
+                    y = SQUARE_SIZE * row + SQUARE_SIZE // 2
+                    if self.board[row][col] == 'W':
+                        pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
+                        pygame.draw.circle(win, WHITE, (x, y), radius)
+                    elif self.board[row][col] == 'B':
+                        pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
+                        pygame.draw.circle(win, BLACK, (x, y), radius)
+                    elif self.board[row][col] == 'R':
+                        pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
+                        pygame.draw.circle(win, RED, (x, y), radius)
 
     def draw(self, win):
         self.draw_squares(win)
-        for row in range(ROWS):
-            for col in range(COLS):
-                marble = self.get_marble((row, col))
-                if marble != " ":
-                    radius = SQUARE_SIZE // 2 - self.PADDING
-                    x = row
-                    y = col
-                    pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
-                    if marble == 'W':
-                        pygame.draw.circle(win, WHITE, (x, y), radius)
-                    if marble == 'B':
-                        pygame.draw.circle(win, BLACK, (x, y), radius)
-                    if marble == 'R':
-                        pygame.draw.circle(win, RED, (x, y), radius)
+        self.draw_dots(win)
+        self.draw_marbles(win)
 
     def showGame(self):
         """Prints various details about the game."""
@@ -85,10 +86,10 @@ class Board:
         self.board[1][1] = 'W'
 
         # Top right
-        self.board[0][6] = 'B'
         self.board[0][5] = 'B'
-        self.board[1][5] = 'B'
+        self.board[0][6] = 'B'
         self.board[1][6] = 'B'
+        self.board[1][5] = 'B'
 
         # Bottom Left
         self.board[5][0] = 'B'
