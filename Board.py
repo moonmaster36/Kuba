@@ -9,9 +9,19 @@ class Player:
         self.marble_color = marble_color
         self.marble_count = 8
         self.captured_count = 0
+        self.board_state_after_move = None
 
     def __repr__(self):
         return f"{self.name} '{self.marble_color}'"
+
+    def showBoardStateAfterMove(self):
+        print(F"*** {self.name} board_state_after_move: ***")
+        if self.board_state_after_move:
+            for row in range(len(self.board_state_after_move)):
+                print(self.board_state_after_move[row])
+            print()
+        else:
+            print(f'board_copy: {self.board_state_after_move}\n')
 
     def get_name(self):
         return self.name
@@ -25,8 +35,14 @@ class Player:
     def get_captured_count(self):
         return self.captured_count
 
+    def get_board_state_after_move(self):
+        return self.board_state_after_move
+
     def set_marble_count(self, x):
         self.marble_count = x
+
+    def set_board_state_after_move(self, x):
+        self.board_state_after_move = x
 
     def decrement_marble_count(self, x):
         self.marble_count -= x
@@ -43,6 +59,7 @@ class Kuba:
         self.p1 = Player(p1[0], p1[1])
         self.p2 = Player(p2[0], p2[1])
         self.board = [[' ' for _ in range(self.ROW_RANGE)] for _ in range(self.COL_RANGE)]
+        self.board_copy = None
         self.red_marbles = 13
         self.white_marbles = 8
         self.black_marbles = 8
@@ -152,6 +169,7 @@ class Kuba:
         return white, black, red
 
     def showBoard(self):
+        print(F"** BOARD **")
         for i in range(self.COL_RANGE):
             print(self.board[i])
         print()
@@ -316,13 +334,6 @@ class Kuba:
         if not valid:
             return False
 
-        # Ko Rule enforcement
-        # Store marble counts.
-        original_board = self.get_marble_count()
-        # Store current_player's original captured marble count to restore game state if Ko Rule is violated.
-        # Take snapshot of board to enforce Ko Rule
-        board_pre_move = None
-
         if direction == 'R':
             row_number = coords[0]
             successful_right_move = self.move_right(self.board[row_number], coords[1], current_player)
@@ -407,6 +418,27 @@ class Kuba:
         else:
             opponent_player = self.p1
 
+        # Ko Rule enforcement
+        opponent_board = opponent_player.get_board_state_after_move()
+        if opponent_board:
+            print(f'{opponent_player.get_name()} state:  {opponent_board[1]}')
+        else:
+            print(f'opponent_board: None')
+        print(f'cur_board: {self.board[1]}')
+        if self.board == opponent_player.get_board_state_after_move():
+            # Restore game board to previous state
+            self.board = opponent_player.get_board_state_after_move()
+            restored_marble_count = self.get_marble_count()
+            self.white_marbles = restored_marble_count[0]
+            self.black_marbles = restored_marble_count[1]
+            self.red_marbles = restored_marble_count[2]
+
+            print(F"{current_player} violated Ko Rule {coords} {direction}")
+            return False
+
+        # After successful move, store board state in opponent_player
+        opponent_player.set_board_state_after_move([list(row) for row in self.board])
+
         # Check if game has been won
         if current_player.get_captured_count() == 7 and self.red_marbles <= 6:
             self.winner = current_player.get_name()
@@ -415,6 +447,8 @@ class Kuba:
             self.winner = current_player.get_name()
 
         # Scan board to determine if opponent has any remaining moves.
+
+        print(F'{current_player} successfully moved {coords} {direction}')
         self.current_turn = opponent_player.get_name()
         return True
 
@@ -426,14 +460,16 @@ if __name__ == '__main__':
     # Implementing Ko Rule Testing.
     # Get row 2 into state: [' ', 'W', 'W', 'R', 'B', 'B', ' ']
     game.make_move('p1', (1, 0), 'R')
+    game.showBoard()
     game.make_move('p2', (1, 6), 'L')
     game.showBoard()
+
+    prev_board = game.get_board()
 
     game.make_move('p1', (1, 1), 'R')  # W pushes right
     game.showBoard()
 
     move = game.make_move('p2', (1, 6), 'L')  # B pushes left, reversing the move W just made.
-    print(move)
     game.showBoard()
 
     game.showGame()
