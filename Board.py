@@ -239,6 +239,17 @@ class Kuba:
 
         return True
 
+    def check_for_winner(self, current_player, opponent_player) -> bool:
+        """
+        Immediately after a move has been made, determines if the player that made the
+            move has won the game.
+        :param current_player: player that just made a move.
+        :param opponent_player: opponent of current_player
+        :return: True if the player has won
+        :return: False if the player has not won
+        """
+        pass
+
     def move_right(self, row_input, start, current_player):
         """
         - Push marbles at start in row_input to the right.
@@ -343,7 +354,6 @@ class Kuba:
 
             successful_forward_move = self.move_right(column_to_modify, (self.COL_RANGE - 1) - coords[0],
                                                       current_player)
-
             if not successful_forward_move:  # Return false if player tried to push their own marble off.
                 return False
 
