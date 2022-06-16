@@ -261,7 +261,7 @@ class Kuba:
 
         # Check if marble has space to move (i.e., that marble is not in middle of marble chain.)
         if opposite_marble == 'W' or opposite_marble == 'B' or opposite_marble == 'R':
-            print(F'{candidate_player} attempted to push marble in middle of chain: {coords} {direction}')
+            print(F'{candidate_player} attempted to push marble in chain: {coords} {direction}')
             return False
 
         return True
@@ -412,6 +412,7 @@ class Kuba:
             self.p2.set_marble_count(self.white_marbles)
 
         # Determine who the opponent player is.
+        # Determine who the opponent player is.
         opponent_player = None
         if self.p1.get_name() == current_player.get_name():
             opponent_player = self.p2
@@ -419,12 +420,6 @@ class Kuba:
             opponent_player = self.p1
 
         # Ko Rule enforcement
-        opponent_board = opponent_player.get_board_state_after_move()
-        if opponent_board:
-            print(f'{opponent_player.get_name()} state:  {opponent_board[1]}')
-        else:
-            print(f'opponent_board: None')
-        print(f'cur_board: {self.board[1]}')
         if self.board == opponent_player.get_board_state_after_move():
             # Restore game board to previous state
             self.board = opponent_player.get_board_state_after_move()
@@ -457,19 +452,14 @@ if __name__ == '__main__':
     game = Kuba(('p1', 'W'), ('p2', 'B'))
     game.setupBoard()
 
-    # Implementing Ko Rule Testing.
-    # Get row 2 into state: [' ', 'W', 'W', 'R', 'B', 'B', ' ']
-    game.make_move('p1', (1, 0), 'R')
+    # Implementing Ko Rule Testing for Vertical Movement
+    game.make_move('p1', (0, 1), 'B')
     game.showBoard()
-    game.make_move('p2', (1, 6), 'L')
-    game.showBoard()
-
-    prev_board = game.get_board()
-
-    game.make_move('p1', (1, 1), 'R')  # W pushes right
+    game.make_move('p2', (6, 1), 'F')
     game.showBoard()
 
-    move = game.make_move('p2', (1, 6), 'L')  # B pushes left, reversing the move W just made.
+    game.make_move('p1', (1, 1), 'B')  # W pushes down
     game.showBoard()
 
-    game.showGame()
+    move = game.make_move('p2', (6, 1), 'F')  # B pushes forward, reversing the move W just made.
+    game.showBoard()
