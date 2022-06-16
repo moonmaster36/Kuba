@@ -1,18 +1,23 @@
+import pygame
 from kuba.player import Player
-from kuba.constants import BLACK, ROWS, RED, SQUARE_SIZE, COLS, WHITE
+from kuba.constants import RED, WHITE, BLACK, BLUE, GREY, SQUARE_SIZE, ROWS, COLS
 class Board:
-    ROW_RANGE = 7
-    COL_RANGE = 7
-
     def __init__(self, p1: tuple, p2: tuple):
         self.p1 = Player(p1[0], p1[1])
         self.p2 = Player(p2[0], p2[1])
-        self.board = [[' ' for _ in range(self.ROW_RANGE)] for _ in range(self.COL_RANGE)]
+        self.board = [[' ' for _ in range(ROWS)] for _ in range(COLS)]
         self.board_copy = None
         self.red_marbles = 13
         self.white_marbles = self.black_marbles = 8
         self.current_turn = None
         self.winner = None
+        self.setupBoard()
+
+    def draw_squares(self, win):
+        win.fill(BLACK)
+        for row in range(ROWS):
+            for col in range(COLS):
+                pygame.draw.rect(win, GREY, )
 
     def showGame(self):
         """Prints various details about the game."""
@@ -99,14 +104,14 @@ class Board:
         row = coords[0]
         col = coords[1]
         # Determine if coords are valid
-        if 0 <= row < self.ROW_RANGE and 0 <= col < self.COL_RANGE:
+        if 0 <= row < ROWS and 0 <= col < COLS:
             return self.board[row][col]
 
     def get_marble_count(self):
         white, black, red = 0, 0, 0
 
-        for i in range(self.COL_RANGE):
-            for j in range(self.ROW_RANGE):
+        for i in range(COLS):
+            for j in range(ROWS):
                 current_marble = self.board[i][j]
                 if current_marble == 'W':
                     white += 1
@@ -117,14 +122,14 @@ class Board:
         return white, black, red
 
     def showBoard(self):
-        for i in range(self.COL_RANGE):
+        for i in range(COLS):
             print(self.board[i])
         print()
 
     def clearBoard(self):
-        for i in range(self.COL_RANGE):
+        for i in range(COLS):
             self.board[i].clear()
-        self.board = [[' ' for _ in range(self.ROW_RANGE)] for _ in range(self.COL_RANGE)]
+        self.board = [[' ' for _ in range(ROWS)] for _ in range(COLS)]
 
     def get_player(self, playername):
         """Returns the player object given a player name."""
@@ -178,12 +183,12 @@ class Board:
             return False
 
         # Check if row is valid.
-        if coords[0] < 0 or coords[0] >= self.ROW_RANGE:
+        if coords[0] < 0 or coords[0] >= ROWS:
             print(f'Invalid coordinates! coords: ({coords[0]}, {coords[1]})')
             return False
 
         # Check if column is valid.
-        if coords[1] < 0 or coords[1] >= self.COL_RANGE:
+        if coords[1] < 0 or coords[1] >= COLS:
             print(f'Invalid coordinates! coords: ({coords[0]}, {coords[1]})')
             return False
 
@@ -296,7 +301,7 @@ class Board:
             row_copy = [x for x in self.board[row_number]]
             row_copy.reverse()
 
-            successful_left_move = self.move_right(row_copy, self.COL_RANGE - 1 - start, current_player)
+            successful_left_move = self.move_right(row_copy, COLS - 1 - start, current_player)
             if not successful_left_move:  # Return false if player tried to push their own marble off.
                 print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 return False
@@ -311,7 +316,7 @@ class Board:
             col_number = coords[1]
             # Iterate and copy column
             column_to_modify = []
-            for i in range(self.ROW_RANGE):
+            for i in range(ROWS):
                 column_to_modify.append(self.board[i][col_number])
 
             successful_backward_move = self.move_right(column_to_modify, coords[0], current_player)
@@ -320,7 +325,7 @@ class Board:
                 return False
 
             # Transfer list modified by move_right onto game board.
-            for i in range(self.ROW_RANGE):
+            for i in range(ROWS):
                 self.board[i][col_number] = column_to_modify[i]
 
         elif direction == 'F':
@@ -328,13 +333,13 @@ class Board:
             col_number = coords[1]
             # Iterate and copy column
             column_to_modify = []
-            for i in range(self.ROW_RANGE):
+            for i in range(ROWS):
                 column_to_modify.append(self.board[i][col_number])
 
             # Reverse before feeding into move_right (because moving forward is opposite of backwards)
             column_to_modify.reverse()
 
-            successful_forward_move = self.move_right(column_to_modify, (self.COL_RANGE - 1) - coords[0],
+            successful_forward_move = self.move_right(column_to_modify, (COLS - 1) - coords[0],
                                                       current_player)
             if not successful_forward_move:  # Return false if player tried to push their own marble off.
                 print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
@@ -342,7 +347,7 @@ class Board:
 
             # Reverse then transfer modified column onto game board.
             column_to_modify.reverse()
-            for i in range(self.ROW_RANGE):
+            for i in range(ROWS):
                 self.board[i][col_number] = column_to_modify[i]
 
         # Update all marble counts
@@ -397,7 +402,6 @@ class Board:
 
 if __name__ == '__main__':
     game = Board(('p1', 'W'), ('p2', 'B'))
-    game.setupBoard()
 
     # Implementing Ko Rule Testing for Vertical Movement
     game.make_move('p1', (0, 1), 'B')
