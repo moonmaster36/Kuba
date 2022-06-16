@@ -1,5 +1,4 @@
 import unittest
-from Board import *
 
 
 class TestWinnerMakeMove(unittest.TestCase):

@@ -1,5 +1,5 @@
 import unittest
-from .Board import *
+from kuba.Board import *
 
 
 class TestValidateMove(unittest.TestCase):
