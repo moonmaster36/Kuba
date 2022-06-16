@@ -297,11 +297,20 @@ class Kuba:
         return True
 
     def make_move(self, playername: str, coords: tuple, direction: str) -> bool:
+        # Before doing anything, check if the move is even valid.
         valid = self.validate_move(playername, coords, direction)
         if not valid:
             return False
 
         current_player = self.get_player(playername)
+
+        # Ko Rule enforcement
+        # Store marble counts.
+        original_board = self.get_marble_count()
+        # Store current_player's original captured marble count to restore game state if Ko Rule is violated.
+        # Take snapshot of board to enforce Ko Rule
+        board_pre_move = None
+
         if direction == 'R':
             row_number = coords[0]
 
@@ -390,7 +399,6 @@ class Kuba:
             self.winner = current_player.get_name()
 
         # Scan board to determine if opponent has any remaining moves.
-
         self.current_turn = opponent_player.get_name()
         return True
 
