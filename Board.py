@@ -169,7 +169,6 @@ class Kuba:
         return white, black, red
 
     def showBoard(self):
-        print(F"** BOARD **")
         for i in range(self.COL_RANGE):
             print(self.board[i])
         print()
