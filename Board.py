@@ -218,6 +218,10 @@ class Kuba:
         candidate_marble = self.get_marble(coords)
         candidate_player = self.get_player(playername)
 
+        if candidate_marble == ' ':
+            print(f"No marble present at that space! coords: ({coords[0]}, {coords[1]})")
+            return False
+
         if candidate_marble == 'R':
             print(f"You cannot move Red marbles! coords: ({coords[0]}, {coords[1]})")
             return False
@@ -407,36 +411,15 @@ class Kuba:
 if __name__ == '__main__':
     game = Kuba(('p1', 'W'), ('p2', 'B'))
     game.setupBoard()
+
+    # Implementing Ko Rule Testing.
+    # Get row 2 into state: [' ', 'W', 'W', 'R', 'B', 'B', ' ']
+    game.make_move('p1', (1, 0), 'R')
+    game.make_move('p2', (1, 6), 'L')
     game.showBoard()
 
-    # Implementing left move. Moving white on (5,6) to left
-    print(f"1.make_move = {game.make_move('p1', (5, 6), 'L')}")
+    game.make_move('p1', (1, 0), 'R')     # W pushes right
+    game.make_move('p2', (1, 6), 'L')     # B pushes left, reversing the move W just made.
     game.showBoard()
-    game.set_turn('p1')
-
-    print(f"2.make_move = {game.make_move('p1', (5, 5), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"3.make_move = {game.make_move('p1', (5, 4), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"4.make_move = {game.make_move('p1', (5, 3), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"5.make_move = {game.make_move('p1', (5, 2), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    # 6 & 7 try to push our own marble off
-    print(f"6.make_move = {game.make_move('p1', (5, 1), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
-
-    print(f"7.make_move = {game.make_move('p1', (5, 0), 'L')}")
-    game.showBoard()
-    game.set_turn('p1')
 
     game.showGame()
