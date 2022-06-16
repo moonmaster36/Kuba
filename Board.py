@@ -390,9 +390,4 @@ if __name__ == '__main__':
     game.setupBoard()
     game.showBoard()
 
-    # Forward movement. White lower right all the way up.
-    print(f"1.make_move = {game.make_move('p1', (3, 3), 'F')}")
-    game.showBoard()
-    game.set_turn('p1')
-
     game.showGame()
