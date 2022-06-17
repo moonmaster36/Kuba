@@ -458,6 +458,7 @@ class Board:
         # Scan board to determine if opponent has any remaining moves.
 
         print(F'{current_player} successfully moved {coords} {direction}')
+        print()
         self.current_turn = opponent_player.get_name()
         # Reset marble position
         self.selected_marble_coords = None
@@ -467,4 +468,17 @@ class Board:
 
 if __name__ == '__main__':
     game = Board(('p1', 'W'), ('p2', 'B'))
-    print(game.get_current_turn())
+    game.setupBoard()
+
+    # Implementing Ko Rule Testing.
+    game.make_move('p1', (0, 0), 'B')
+    game.make_move('p2', (6, 0), 'F')
+
+    game.make_move('p1', (1, 0), 'B')
+    move = game.make_move('p2', (5, 0), 'F')
+    game.showBoard()
+
+    # Violation
+    game.make_move('p1', (1, 0), 'B')
+    game.showBoard()
+
