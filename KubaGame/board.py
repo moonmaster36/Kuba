@@ -1,6 +1,6 @@
 import pygame
 from KubaGame.player import Player
-from KubaGame.constants import RED, WHITE, BLACK, GREY, SQUARE_SIZE, ROWS, COLS
+from KubaGame.constants import RED, WHITE, BLACK, GREY, BLUE, SQUARE_SIZE, ROWS, COLS
 
 
 class Board:
@@ -16,7 +16,11 @@ class Board:
         self.white_marbles = self.black_marbles = 8
         self.current_turn = self.find_starting_player()
         self.winner = None
+        self.selected_marble_coords = None
         self.setupBoard()
+
+    def set_selected_marble_coords(self, x):
+        self.selected_marble_coords = x
 
     def find_starting_player(self):
         # White always starts the game.
@@ -61,6 +65,14 @@ class Board:
         self.draw_squares(win)
         self.draw_dots(win)
         self.draw_marbles(win)
+        if self.selected_marble_coords:
+            # Highlight the selected marble.
+            row = self.selected_marble_coords[0]
+            col = self.selected_marble_coords[1]
+            x = SQUARE_SIZE * col + SQUARE_SIZE // 2
+            y = SQUARE_SIZE * row + SQUARE_SIZE // 2
+            radius = SQUARE_SIZE // 5 - self.PADDING
+            pygame.draw.circle(win, BLUE, (x, y), radius)
 
     def showGame(self):
         """Prints various details about the game."""
@@ -443,6 +455,8 @@ class Board:
 
         print(F'{current_player} successfully moved {coords} {direction}')
         self.current_turn = opponent_player.get_name()
+        # Reset blue dot.
+        self.selected_marble_coords = None
         return True
 
 

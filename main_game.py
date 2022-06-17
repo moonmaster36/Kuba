@@ -14,7 +14,6 @@ def get_row_col_from_mouse(pos):
     x, y = pos
     row = y // SQUARE_SIZE
     col = x // SQUARE_SIZE
-    print(F'mouse: ({row}, {col})')
     return row, col
 
 
@@ -38,7 +37,6 @@ def main():
                 pos = pygame.mouse.get_pos()
                 row, col = get_row_col_from_mouse(pos)
                 kuba.select(row, col, WIN)
-
         kuba.update()
 
     # pygame.quit()
