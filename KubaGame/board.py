@@ -464,6 +464,8 @@ class Board:
         # Reset marble position
         self.selected_marble_coords = None
         self.ko_rule_violated = False
+        # TEMPORARY
+        self.current_turn = 'p1'
         return True
 
 
