@@ -436,13 +436,8 @@ class Board:
         if self.board == opponent_player.get_board_state_after_move():
             # Restore game board to previous state
             # self.board = opponent_player.get_board_state_after_move()
-            print('REJECTED BOARD: ')
-            # self.showBoard()
             current_player_copy = [list(x) for x in current_player.get_board_state_after_move()]
             self.board = current_player_copy
-            print('RESTORED BOARD: ')
-            # self.showBoard()
-            # self.board = current_player.get_board_state_after_move()
             restored_marble_count = self.get_marble_count()
             self.white_marbles = restored_marble_count[0]
             self.black_marbles = restored_marble_count[1]
@@ -478,24 +473,22 @@ if __name__ == '__main__':
     p2 = game.get_player('p2')
     game.setupBoard()
 
-    # Implementing Ko Rule Testing.
-    game.make_move('p1', (0, 0), 'B')
-    game.make_move('p2', (6, 0), 'F')
-
-    game.make_move('p1', (1, 0), 'B')
-    # game.showBoard()
-    game.make_move('p2', (5, 0), 'F')
-    game.showBoard()
-
-    # Violation
-    game.make_move('p1', (1, 0), 'B')
-    game.showBoard()
     game.make_move('p1', (0, 1), 'B')
+    game.set_turn('p1')
+    game.showBoard()
+    game.make_move('p1', (1, 1), 'B')
+    game.set_turn('p1')
     game.showBoard()
 
-    p2.showBoardStateAfterMove()
-    p1.showBoardStateAfterMove()
-    game.make_move('p2', (4, 0), 'F')
+    game.make_move('p1', (6, 5), 'F')
+    game.set_turn('p1')
     game.showBoard()
+    game.make_move('p1', (5, 5), 'F')
+    game.set_turn('p1')
+    game.showBoard()
+
+
+
+
 
 
