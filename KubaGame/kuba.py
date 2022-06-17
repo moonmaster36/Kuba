@@ -40,11 +40,11 @@ def calculate_direction(marble_coords, move_coords):
     out = None
     if row2 == row1 + 2 or row2 == row1 + 1:
         out = 'B'
-    elif row2 == row1 - 2 or row2 == row1 - 1:
+    elif row2 == row1 - 2:
         out = 'F'
-    elif col2 == col1 + 2 or col2 == col1 + 1:
+    elif col2 == col1 + 2:
         out = 'R'
-    elif col2 == col1 - 2 or col2 == col2 - 1:
+    elif col2 == col1 - 2:
         out = 'L'
     print(f'direction = {out}')
     print()
