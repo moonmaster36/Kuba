@@ -87,7 +87,10 @@ class Kuba:
             # pygame.draw.circle(win, BLUE, (x, y), radius)
             # self.update()
             return True
-        return False
+        else:
+            self.selected_coords = None
+            self.selected_marble_coords = None
+            return False
 
     def get_winner(self):
         return self.board.get_winner()
