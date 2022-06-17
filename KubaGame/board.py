@@ -17,7 +17,11 @@ class Board:
         self.current_turn = self.find_starting_player()
         self.winner = None
         self.selected_marble_coords = None
+        self.ko_rule_violated = False
         self.setupBoard()
+
+    def get_ko_rule_violated(self):
+        return self.ko_rule_violated
 
     def set_selected_marble_coords(self, x):
         self.selected_marble_coords = x
@@ -437,7 +441,7 @@ class Board:
             self.white_marbles = restored_marble_count[0]
             self.black_marbles = restored_marble_count[1]
             self.red_marbles = restored_marble_count[2]
-
+            self.ko_rule_violated = True
             print(F"{current_player} violated Ko Rule {coords} {direction}")
             return False
 
@@ -455,8 +459,9 @@ class Board:
 
         print(F'{current_player} successfully moved {coords} {direction}')
         self.current_turn = opponent_player.get_name()
-        # Reset blue dot.
+        # Reset marble position
         self.selected_marble_coords = None
+        self.ko_rule_violated = False
         return True
 
 
