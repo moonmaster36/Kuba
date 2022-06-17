@@ -320,6 +320,9 @@ class Board:
         return True
 
     def make_move(self, playername: str, coords: tuple, direction: str) -> bool:
+        print(F'make_move params: ({playername}, {coords}, {direction})')
+        if not playername or not coords or not direction:
+            return False
         current_player = self.get_player(playername)
         print(
             F'{current_player} attempts to move {coords} {direction}')
