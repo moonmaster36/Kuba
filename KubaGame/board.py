@@ -2,7 +2,6 @@ import pygame
 from KubaGame.player import Player
 from KubaGame.constants import RED, WHITE, BLACK, GREY, BLUE, SQUARE_SIZE, ROWS, COLS
 
-
 class Board:
     PADDING = 15
     OUTLINE = 2
@@ -436,7 +435,8 @@ class Board:
         # Ko Rule enforcement
         if self.board == opponent_player.get_board_state_after_move():
             # Restore game board to previous state
-            self.board = opponent_player.get_board_state_after_move()
+            # self.board = opponent_player.get_board_state_after_move()
+            self.board = current_player.get_board_state_after_move()
             restored_marble_count = self.get_marble_count()
             self.white_marbles = restored_marble_count[0]
             self.black_marbles = restored_marble_count[1]
@@ -468,6 +468,8 @@ class Board:
 
 if __name__ == '__main__':
     game = Board(('p1', 'W'), ('p2', 'B'))
+    p1 = game.get_player('p1')
+    p2 = game.get_player('p2')
     game.setupBoard()
 
     # Implementing Ko Rule Testing.
@@ -475,10 +477,13 @@ if __name__ == '__main__':
     game.make_move('p2', (6, 0), 'F')
 
     game.make_move('p1', (1, 0), 'B')
+    # game.showBoard()
     move = game.make_move('p2', (5, 0), 'F')
     game.showBoard()
 
     # Violation
+    p2.showBoardStateAfterMove()
+    p1.showBoardStateAfterMove()
     game.make_move('p1', (1, 0), 'B')
     game.showBoard()
 
