@@ -6,8 +6,7 @@ from KubaGame.kuba import Kuba
 
 FPS = 60
 
-# WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-WIN = pygame.display.set_mode((WIDTH + 200, HEIGHT + 200))
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Kuba')
 programIcon = pygame.image.load('assets/marbles.png')
 pygame.display.set_icon(programIcon)
