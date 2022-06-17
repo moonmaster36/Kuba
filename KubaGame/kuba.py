@@ -19,48 +19,76 @@ def get_p2_from_user():
     print()
     return Player(name, marble_color.upper())
 
+
 def calculate_direction(marble_coords, move_coords):
-    row_marble = marble_coords[0]
-    col_marble = marble_coords[1]
-    row_move = move_coords[0]
-    col_move = move_coords[1]
-    print(F'marble_coords: {marble_coords}')
-    print(F'move_coords:   {move_coords}')
+    print(marble_coords, move_coords)
+    x1 = marble_coords[0]
+    y1 = marble_coords[1]
+    x2 = move_coords[0]
+    y2 = move_coords[1]
+
+    x_movement = x2 - x1
+    y_movement = y2 - y1
+    print(F'(x1, y1): ({x1}, {y1})')
+    print(F'(x2, y2): ({x2}, {y2})')
+    # print(F'x_movement = {x2} - {x1} = {x_movement}')
+    # print(F'y_movement = {y2} - {y1} = {y_movement}')
+    print(f'out = ({x_movement}, {y_movement})')
+    print()
+    if x_movement == 0 and y_movement > 0:
+        return 'R'
+    if x_movement == 0 and y_movement < 0:
+        return 'L'
+    if x_movement == 0 and y_movement > 0:
+        return 'B'
+    if x_movement == 0 and y_movement < 0:
+        return 'F'
 
 
 class Kuba:
+    PADDING = 15
+    OUTLINE = 2
+
     def __init__(self, win):
         # self._init()
         self.win = win
         self.board = Board(("p1", "W"), ("p2", "B"))
         self.selected_coords = None
-        self.selected_marble = None
+        self.selected_marble_coords = None
 
     def update(self):
         self.board.draw(self.win)
         pygame.display.update()
 
-    def select(self, row, col):
+    def select(self, row, col, win):
+        print(f'name = {self.board.get_current_turn()}')
         current_player = self.board.get_player(self.board.get_current_turn())
-        if self.selected_coords and self.selected_marble:
-            print(F'*** Post ***')
-            print(F'move:   ({row}, {col})')
-            print(F'marble: {self.selected_coords}')
-            print(F'color:  {self.selected_marble}')
-            result = self.board.make_move(current_player.get_name(), (row, col), )
+        if self.selected_marble_coords:
+            # print(F'color:  {self.selected_marble}')
+            self.selected_coords = (row, col)
+            direction = calculate_direction(self.selected_marble_coords, self.selected_coords)
+
+            result = self.board.make_move(current_player.get_name(),
+                                          (self.selected_marble_coords[0], self.selected_marble_coords[1]), direction)
             if not result:
-                self.selected_marble = None
+                self.selected_marble_coords = None
                 self.selected_coords = None
-                self.select(row, col)
+                self.select(row, col, win)
+            else:
+                # Clear after sucessful move
+                self.selected_coords = None
+                self.selected_marble_coords = None
 
         marble = self.board.get_marble((row, col))
         if marble != " ":
-            print(f'marble = {marble}')
-            self.selected_marble = marble
-            self.selected_coords = (row, col)
-
+            self.selected_marble_coords = (row, col)
+            # Highlight the selected marble.
+            x = SQUARE_SIZE * col + SQUARE_SIZE // 2
+            y = SQUARE_SIZE * row + SQUARE_SIZE // 2
+            radius = SQUARE_SIZE // 5 - self.PADDING
+            pygame.draw.circle(win, BLUE, (x, y), radius)
+            self.update()
             return True
-
         return False
 
     def get_winner(self):

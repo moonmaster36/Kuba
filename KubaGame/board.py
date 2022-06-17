@@ -14,13 +14,16 @@ class Board:
         self.board_copy = None
         self.red_marbles = 13
         self.white_marbles = self.black_marbles = 8
-        self.current_turn = None
-        if self.p1.get_marble_color() == 'W':
-            self.current_turn = self.p1
-        else:
-            self.current_turn = self.p2
+        self.current_turn = self.find_starting_player()
         self.winner = None
         self.setupBoard()
+
+    def find_starting_player(self):
+        # White always starts the game.
+        if self.p1.get_marble_color() == 'W':
+            return self.p1.get_name()
+        else:
+            return self.p2.get_name()
 
     def draw_squares(self, win):
         win.fill(BLACK)
@@ -442,15 +445,4 @@ class Board:
 
 if __name__ == '__main__':
     game = Board(('p1', 'W'), ('p2', 'B'))
-
-    # Implementing Ko Rule Testing for Vertical Movement
-    game.make_move('p1', (0, 1), 'B')
-    game.showBoard()
-    game.make_move('p2', (6, 1), 'F')
-    game.showBoard()
-
-    game.make_move('p1', (1, 1), 'B')  # W pushes down
-    game.showBoard()
-
-    move = game.make_move('p2', (6, 1), 'F')  # B pushes forward, reversing the move W just made.
-    game.showBoard()
+    print(game.get_current_turn())
