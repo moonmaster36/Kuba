@@ -28,15 +28,11 @@ def calculate_direction(marble_coords, move_coords):
 
     row_movement = row1 - row2
     col_movement = col1 - col2
-    # print(F'(row1, col1): ({row1}, {col1})')
-    # print(F'(row2, col2): ({row2}, {col2})')
-    # print(F'row_movement = {row2} - {row1} = {row_movement}')
-    # print(F'col_movement = {col2} - {col1} = {col_movement}')
-    print(F'row1: {row1} row2 {row2}')
-    print(F'col1: {col1} col2 {col2}')
-    print(f'row_movement: {row_movement} col_movement: {col_movement}')
-    print(f'row1 + 2 = {row1 + 2}')
-    print(f'res = ({row_movement}, {col_movement})')
+    # print(F'row1: {row1} row2 {row2}')
+    # print(F'col1: {col1} col2 {col2}')
+    # print(f'row_movement: {row_movement} col_movement: {col_movement}')
+    # print(f'row1 + 2 = {row1 + 2}')
+    # print(f'res = ({row_movement}, {col_movement})')
     out = None
     if row2 == row1 + 2 or row2 == row1 + 1:
         out = 'B'
@@ -70,7 +66,6 @@ class Kuba:
         current_player = self.board.get_player(self.board.get_current_turn())
         marble = self.board.get_marble((row, col))
         if self.selected_marble_coords:
-            # print(F'color:  {self.selected_marble}')
             self.selected_move_coords = (row, col)
             direction = calculate_direction(self.selected_marble_coords, self.selected_move_coords)
 
@@ -91,9 +86,7 @@ class Kuba:
                 self.board.set_selected_marble_coords(None)
                 self.selected_move_coords = None
                 self.board.showBoard()
-
                 return False
-                # self.update()
 
         elif marble != " ":
             self.selected_marble_coords = (row, col)
@@ -107,17 +100,3 @@ class Kuba:
 
     def get_winner(self):
         return self.board.get_winner()
-
-    """
-    # def _init(self):
-    #     self.selected = None
-    #     self.board = Board(("p1", "W"), ("p2", "B"))
-        # p1 = get_p1_from_user()
-        # p2 = get_p2_from_user()
-        # self.board = Board((p1.get_name(), p1.get_marble_count()),
-        #                    (p2.get_name(), p2.get_marble_count()))
-        # self.turn = self.board.get_current_turn()
-
-    # def reset(self):
-    #     self._init()
-    """
