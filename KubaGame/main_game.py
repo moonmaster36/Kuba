@@ -1,7 +1,6 @@
 # Assets: https://techwithtim.net/wp-content/uploads/2020/09/assets.zip
 import pygame
 from KubaGame.kuba import Kuba
-from KubaGame.scoreboard import ScoreBoard
 from KubaGame.constants import RED, WHITE, BLACK, BLUE, GREY, SQUARE_SIZE, ROWS, COLS, WIDTH, HEIGHT
 
 FPS = 60
