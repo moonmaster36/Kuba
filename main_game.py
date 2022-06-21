@@ -6,8 +6,9 @@ from KubaGame.constants import RED, WHITE, BLACK, BLUE, GREY, SQUARE_SIZE, ROWS,
 
 FPS = 60
 
-KUBA_WINDOW = pygame.display.set_mode((WIDTH, HEIGHT + 100))
-SCORE_WINDOW = pygame.display.set_mode((WIDTH, HEIGHT + 100))
+KUBA_WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
+SCORE_WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
+test_win = pygame.display.set_mode((WIDTH + 100, HEIGHT + 200))
 pygame.display.set_caption('Kuba')
 programIcon = pygame.image.load('assets/marbles.png')
 pygame.display.set_icon(programIcon)
@@ -41,6 +42,7 @@ def main():
                 row, col = get_row_col_from_mouse(pos)
                 kuba.select(row, col, KUBA_WINDOW)
         kuba.update_kuba_window()
+        kuba.update_score_window()
 
     # pygame.quit()
 
