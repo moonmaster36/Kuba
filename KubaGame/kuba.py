@@ -51,25 +51,23 @@ class Kuba:
     PADDING = 15
     OUTLINE = 2
 
-    def __init__(self, win):
+    def __init__(self, kuba_window, score_window):
         # self._init()
-        self.win = win
+        self.kuba_window = kuba_window
+        self.score_window = score_window
         self.board = Board(("p1", "W"), ("p2", "B"))
-
         self.selected_move_coords = None
         self.selected_marble_coords = None
 
     def get_board(self):
         return self.board
 
-    def get_p1(self):
-        return self._p1
+    def update_kuba_window(self):
+        self.board.draw(self.kuba_window)
+        pygame.display.update()
 
-    def get_p2(self):
-        return self._p2
-
-    def update(self):
-        self.board.draw(self.win)
+    def update_score_window(self):
+        self.board.draw(self.score_window)
         pygame.display.update()
 
     def select(self, row, col, win):

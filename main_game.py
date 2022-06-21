@@ -1,13 +1,13 @@
 # Assets: https://techwithtim.net/wp-content/uploads/2020/09/assets.zip
 import pygame
-from KubaGame.constants import RED, WHITE, BLACK, BLUE, GREY, SQUARE_SIZE, ROWS, COLS, WIDTH, HEIGHT
 from KubaGame.kuba import Kuba
 from KubaGame.scoreboard import ScoreBoard
+from KubaGame.constants import RED, WHITE, BLACK, BLUE, GREY, SQUARE_SIZE, ROWS, COLS, WIDTH, HEIGHT
 
 FPS = 60
 
-WIN = pygame.display.set_mode((WIDTH, HEIGHT + 100))
-SCORE_WIN = pygame.display.set_mode((WIDTH, HEIGHT + 100))
+KUBA_WINDOW = pygame.display.set_mode((WIDTH, HEIGHT + 100))
+SCORE_WINDOW = pygame.display.set_mode((WIDTH, HEIGHT + 100))
 pygame.display.set_caption('Kuba')
 programIcon = pygame.image.load('assets/marbles.png')
 pygame.display.set_icon(programIcon)
@@ -23,12 +23,7 @@ def get_row_col_from_mouse(pos):
 def main():
     run = True
     clock = pygame.time.Clock()
-    kuba = Kuba(WIN)
-    board = kuba.get_board()
-    p1 = board.get_player('p1')
-    p2 = board.get_player('p2')
-    score = ScoreBoard(SCORE_WIN, board, p1, p2)
-
+    kuba = Kuba(KUBA_WINDOW, SCORE_WINDOW)
 
     while run:
         clock.tick(FPS)
@@ -44,8 +39,8 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 row, col = get_row_col_from_mouse(pos)
-                kuba.select(row, col, WIN)
-        kuba.update()
+                kuba.select(row, col, KUBA_WINDOW)
+        kuba.update_kuba_window()
 
     # pygame.quit()
 

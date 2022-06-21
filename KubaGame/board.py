@@ -2,6 +2,7 @@ import pygame
 from KubaGame.player import Player
 from KubaGame.constants import RED, WHITE, BLACK, GREY, BLUE, SQUARE_SIZE, ROWS, COLS
 
+
 class Board:
     PADDING = 15
     OUTLINE = 2
@@ -31,6 +32,19 @@ class Board:
             return self.p1.get_name()
         else:
             return self.p2.get_name()
+
+    def draw(self, win):
+        self.draw_squares(win)
+        self.draw_dots(win)
+        self.draw_marbles(win)
+        if self.selected_marble_coords:
+            # Highlight the selected marble.
+            row = self.selected_marble_coords[0]
+            col = self.selected_marble_coords[1]
+            x = SQUARE_SIZE * col + SQUARE_SIZE // 2
+            y = SQUARE_SIZE * row + SQUARE_SIZE // 2
+            radius = SQUARE_SIZE // 5 - self.PADDING
+            pygame.draw.circle(win, BLUE, (x, y), radius)
 
     def draw_squares(self, win):
         win.fill(BLACK)
@@ -63,19 +77,6 @@ class Board:
                     elif self.board[row][col] == 'R':
                         pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
                         pygame.draw.circle(win, RED, (x, y), radius)
-
-    def draw(self, win):
-        self.draw_squares(win)
-        self.draw_dots(win)
-        self.draw_marbles(win)
-        if self.selected_marble_coords:
-            # Highlight the selected marble.
-            row = self.selected_marble_coords[0]
-            col = self.selected_marble_coords[1]
-            x = SQUARE_SIZE * col + SQUARE_SIZE // 2
-            y = SQUARE_SIZE * row + SQUARE_SIZE // 2
-            radius = SQUARE_SIZE // 5 - self.PADDING
-            pygame.draw.circle(win, BLUE, (x, y), radius)
 
     def showGame(self):
         """Prints various details about the game."""
@@ -488,9 +489,3 @@ if __name__ == '__main__':
     game.make_move('p1', (5, 5), 'F')
     game.set_turn('p1')
     game.showBoard()
-
-
-
-
-
-

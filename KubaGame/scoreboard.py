@@ -7,6 +7,7 @@ from KubaGame.board import Board
 class ScoreBoard:
     def __init__(self, win, kuba):
         self._win = win
+        self._kuba_game = kuba
 
     def draw(self, win):
         self.draw_frame(win)
