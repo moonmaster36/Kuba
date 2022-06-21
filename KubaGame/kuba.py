@@ -55,8 +55,18 @@ class Kuba:
         # self._init()
         self.win = win
         self.board = Board(("p1", "W"), ("p2", "B"))
+
         self.selected_move_coords = None
         self.selected_marble_coords = None
+
+    def get_board(self):
+        return self.board
+
+    def get_p1(self):
+        return self._p1
+
+    def get_p2(self):
+        return self._p2
 
     def update(self):
         self.board.draw(self.win)

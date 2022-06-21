@@ -2,11 +2,12 @@
 import pygame
 from KubaGame.constants import RED, WHITE, BLACK, BLUE, GREY, SQUARE_SIZE, ROWS, COLS, WIDTH, HEIGHT
 from KubaGame.kuba import Kuba
-
+from KubaGame.scoreboard import ScoreBoard
 
 FPS = 60
 
-WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+WIN = pygame.display.set_mode((WIDTH, HEIGHT + 100))
+SCORE_WIN = pygame.display.set_mode((WIDTH, HEIGHT + 100))
 pygame.display.set_caption('Kuba')
 programIcon = pygame.image.load('assets/marbles.png')
 pygame.display.set_icon(programIcon)
@@ -23,6 +24,11 @@ def main():
     run = True
     clock = pygame.time.Clock()
     kuba = Kuba(WIN)
+    board = kuba.get_board()
+    p1 = board.get_player('p1')
+    p2 = board.get_player('p2')
+    score = ScoreBoard(SCORE_WIN, board, p1, p2)
+
 
     while run:
         clock.tick(FPS)
