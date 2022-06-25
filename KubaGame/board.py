@@ -12,13 +12,13 @@ class Board:
         self.p1 = Player(p1[0], p1[1])
         self.p2 = Player(p2[0], p2[1])
         self.board = [[' ' for _ in range(ROWS)] for _ in range(COLS)]
+        self.current_turn = self.p1.get_name() if self.p1.get_marble_color() == 'W' else self.p2.get_name()
+        self.ko_rule_violated = False
+        self.winner = None
+        self.selected_marble_coords = None
         self.board_copy = None
         self.red_marbles = 13
         self.white_marbles = self.black_marbles = 8
-        self.current_turn = self.p1.get_name() if self.p1.get_marble_color() == 'W' else self.p2.get_name()
-        self.winner = None
-        self.selected_marble_coords = None
-        self.ko_rule_violated = False
         self.setupBoard()
 
     def get_player(self, playername: str):
@@ -30,6 +30,32 @@ class Board:
 
     def get_current_turn(self):
         return self.current_turn
+
+    def set_current_turn(self, x):
+        self.current_turn = x
+
+    def get_ko_rule_violated(self):
+        return self.ko_rule_violated
+
+    def get_winner(self):
+        return self.winner
+
+    def set_winner(self, x):
+        self.winner = x
+
+    def check_for_winner(self, current_player, opponent_player) -> bool:
+        """
+        Immediately after a move has been made, determines if the player that made the
+            move has won the game.
+        :param current_player: player that just made a move.
+        :param opponent_player: opponent of current_player
+        :return: True if the player has won
+        :return: False if the player has not won
+        """
+        pass
+
+    def set_selected_marble_coords(self, x):
+        self.selected_marble_coords = x
 
     def get_marble_count(self):
         white, black, red = 0, 0, 0
@@ -44,20 +70,41 @@ class Board:
                     red += 1
         return white, black, red
 
-    def get_winner(self):
-        return self.winner
+    def get_marble(self, coords: tuple):
+        """Return the marble at the given position"""
+        row = coords[0]
+        col = coords[1]
+        # Determine if coords are valid
+        if 0 <= row < ROWS and 0 <= col < COLS:
+            return self.board[row][col]
 
-    def get_ko_rule_violated(self):
-        return self.ko_rule_violated
+    def get_opposite_marble(self, coords: tuple, direction: str):
+        """
+        - Used in validate_move to check the space opposite of the desired move direction
+        - Returns marble in space opposite of direction.
+        - If no marble in space opposite, returns None.
+        :param coords: marble location
+        :param direction: direction of desired move
+        :return:
+        """
+        row = coords[0]
+        col = coords[1]
+        candidate_coords = None
+        # Check if marble exists in opposite location of direction of move.
+        # Check forward space.
+        if direction == 'B':
+            candidate_coords = (row - 1, col)  # Check forward space.
+        # Check
+        if direction == 'R':
+            candidate_coords = (row, col - 1)  # Check left space.
 
-    def set_selected_marble_coords(self, x):
-        self.selected_marble_coords = x
+        if direction == 'F':
+            candidate_coords = (row + 1, col)  # Check backward space.
 
-    def set_turn(self, x):
-        self.current_turn = x
-
-    def set_winner(self, x):
-        self.winner = x
+        if direction == 'L':
+            candidate_coords = (row, col + 1)  # Check right space
+        opposite_marble = self.get_marble(candidate_coords)
+        return opposite_marble
 
     def make_move(self, playername: str, coords: tuple, direction: str) -> bool:
         """
@@ -313,17 +360,6 @@ class Board:
         for i in range(len(temp_row)):
             row_input[i] = temp_row[i]
         return True
-
-    def check_for_winner(self, current_player, opponent_player) -> bool:
-        """
-        Immediately after a move has been made, determines if the player that made the
-            move has won the game.
-        :param current_player: player that just made a move.
-        :param opponent_player: opponent of current_player
-        :return: True if the player has won
-        :return: False if the player has not won
-        """
-        pass
 
     def setupBoard(self):
         # Top left
