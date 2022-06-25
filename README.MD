@@ -13,7 +13,7 @@ Push your marbles to shove red scoring marbles (or your opponent's!) off the gri
 ## Intstallation
 
 1. Extract the files to a local directory. 
-2. In a terminal enter:
+2. At a command prompt, run:
 
 ```bash
 python KubaGame/main_game.py
