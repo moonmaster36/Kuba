@@ -1,1 +1,1 @@
-![Starting Board](/assets/starting_board.png)
+![Starting Board](/assets/starting_board1.png)
