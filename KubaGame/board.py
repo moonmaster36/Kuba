@@ -253,10 +253,6 @@ class Board:
         self.selected_marble_coords = None
         self.ko_rule_violated = False
 
-        # TEMPORARY
-        self.current_turn = 'p1'
-        return True
-
     def validate_move(self, playername: str, coords: tuple, direction: str) -> bool:
         """
         -Validates a move
@@ -312,7 +308,8 @@ class Board:
 
         return True
 
-    def move_right(self, row_input: List[chr], start: int, current_player: object) -> bool:
+    @staticmethod
+    def move_right(row_input: List[chr], start: int, current_player: object) -> bool:
         """
         - Push marbles at start in row_input to the right.
         - Determines number of marbles affected by move,
@@ -414,7 +411,8 @@ class Board:
             radius = SQUARE_SIZE // 5 - self.PADDING
             pygame.draw.circle(window, BLUE, (x, y), radius)
 
-    def draw_grey_squares(self, window) -> None:
+    @staticmethod
+    def draw_grey_squares(window) -> None:
         window.fill(BLACK)
         for row in range(ROWS):
             for col in range(COLS):
