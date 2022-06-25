@@ -1,7 +1,7 @@
 # Kuba
 Push your marbles to shove red scoring marbles (or your opponent's!) off the grid.
 
-![Gameplay](/assets/gameplay-final.gif)
+![Gameplay](/assets/gameplay.gif)
 
 ## Instructions
 * Each player has two clusters of four marbles each in opposite corners.
