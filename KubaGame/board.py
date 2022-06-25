@@ -14,24 +14,11 @@ class Board:
         self.board_copy = None
         self.red_marbles = 13
         self.white_marbles = self.black_marbles = 8
-        self.current_turn = self.find_starting_player()
+        self.current_turn = self.p1.get_name() if self.p1.get_marble_color() == 'W' else self.p2.get_name()
         self.winner = None
         self.selected_marble_coords = None
         self.ko_rule_violated = False
         self.setupBoard()
-
-    def get_ko_rule_violated(self):
-        return self.ko_rule_violated
-
-    def set_selected_marble_coords(self, x):
-        self.selected_marble_coords = x
-
-    def find_starting_player(self):
-        """Note: white always starts the game"""
-        if self.p1.get_marble_color() == 'W':
-            return self.p1.get_name()
-        else:
-            return self.p2.get_name()
 
     def draw(self, window):
         """
@@ -84,135 +71,6 @@ class Board:
                         pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
                         pygame.draw.circle(win, RED, (x, y), radius)
 
-    def showGame(self):
-        """Prints various details about the game."""
-        print(F'-------- Game Details --------')
-        print(f'Board Status: \nWhite: {self.white_marbles} \nBlack: {self.black_marbles} \nRed: {self.red_marbles}')
-        print(f'Winner: {self.get_winner()}')
-        print(f'Turn: {self.get_current_turn()}')
-
-        print()
-        print(F'Player 1: {self.p1.get_name()}')
-        print(F'Marble Color: {self.p1.get_marble_color()}')
-        print(f'Marble Count: {self.p1.get_marble_count()}')
-        print(F'Captured: {self.get_captured(self.p1.get_name())}')
-        print()
-        print(F'Player 2: {self.p2.get_name()}')
-        print(F'Marble Color: {self.p2.get_marble_color()}')
-        print(f'Marble Count: {self.p2.get_marble_count()}')
-        print(F'Captured: {self.get_captured(self.p2.get_name())}')
-        print('------------------------------')
-
-    def setupBoard(self):
-        # Top left
-        self.board[0][0] = 'W'
-        self.board[0][1] = 'W'
-        self.board[1][0] = 'W'
-        self.board[1][1] = 'W'
-
-        # Top right
-        self.board[0][5] = 'B'
-        self.board[0][6] = 'B'
-        self.board[1][6] = 'B'
-        self.board[1][5] = 'B'
-
-        # Bottom Left
-        self.board[5][0] = 'B'
-        self.board[5][1] = 'B'
-        self.board[6][0] = 'B'
-        self.board[6][1] = 'B'
-
-        # Bottom Right
-        self.board[5][5] = 'W'
-        self.board[5][6] = 'W'
-        self.board[6][5] = 'W'
-        self.board[6][6] = 'W'
-
-        # Red marbles
-        self.board[1][3] = 'R'
-        self.board[2][2] = 'R'
-        self.board[2][3] = 'R'
-        self.board[2][4] = 'R'
-        self.board[3][1] = 'R'
-        self.board[3][2] = 'R'
-        self.board[3][3] = 'R'
-        self.board[3][4] = 'R'
-        self.board[3][5] = 'R'
-        self.board[4][2] = 'R'
-        self.board[4][3] = 'R'
-        self.board[4][4] = 'R'
-        self.board[5][3] = 'R'
-
-    def set_turn(self, x):
-        self.current_turn = x
-
-    def set_winner(self, x):
-        self.winner = x
-        """Returns the player object given a player name."""
-
-    def get_player(self, playername):
-        """
-        
-        :param playername:
-        :return:
-        """
-        if self.p1.get_name() == playername:
-            return self.p1
-
-        if self.p2.get_name() == playername:
-            return self.p2
-
-    def get_board(self):
-        return self.board
-
-    def get_current_turn(self):
-        return self.current_turn
-
-    def get_winner(self):
-        return self.winner
-
-    def get_captured(self, playername):
-        if self.p1.get_name() == playername:
-            return self.p1.get_captured_count()
-        else:
-            return self.p2.get_captured_count()
-
-    def get_marble(self, coords: tuple):
-        """Return the marble at the given position"""
-        row = coords[0]
-        col = coords[1]
-        # Determine if coords are valid
-        if 0 <= row < ROWS and 0 <= col < COLS:
-            return self.board[row][col]
-
-    def get_marble_count(self):
-        white, black, red = 0, 0, 0
-
-        for i in range(COLS):
-            for j in range(ROWS):
-                current_marble = self.board[i][j]
-                if current_marble == 'W':
-                    white += 1
-                elif current_marble == 'B':
-                    black += 1
-                elif current_marble == 'R':
-                    red += 1
-        return white, black, red
-
-    def showBoard(self):
-        for i in range(COLS):
-            print(self.board[i])
-        print()
-
-    def clearBoard(self):
-        for i in range(COLS):
-            self.board[i].clear()
-        self.board = [[' ' for _ in range(ROWS)] for _ in range(COLS)]
-        """
-        Return marble in space opposite of move direction. If no marble in space opposite,
-        returns None.
-        """
-
     def get_opposite_marble(self, coords: tuple, direction: str):
         """
         - Used in validate_move to check the space opposite of the desired move direction
@@ -226,18 +84,15 @@ class Board:
         col = coords[1]
         candidate_coords = None
         # Check if marble exists in opposite location of direction of move.
-        # Check forward space.
-        if direction == 'B':
-            candidate_coords = (row - 1, col)  # Check forward space.
-        # Check
-        if direction == 'R':
-            candidate_coords = (row, col - 1)  # Check left space.
+        if direction == 'B':  # Check forward space.
+            candidate_coords = (row - 1, col)
+        if direction == 'R':  # Check left space.
+            candidate_coords = (row, col - 1)
+        if direction == 'F':  # Check backward space.
+            candidate_coords = (row + 1, col)
+        if direction == 'L':  # Check right space
+            candidate_coords = (row, col + 1)
 
-        if direction == 'F':
-            candidate_coords = (row + 1, col)  # Check backward space.
-
-        if direction == 'L':
-            candidate_coords = (row, col + 1)  # Check right space
         opposite_marble = self.get_marble(candidate_coords)
         return opposite_marble
 
@@ -506,3 +361,128 @@ class Board:
         # TEMPORARY
         self.current_turn = 'p1'
         return True
+
+    def get_ko_rule_violated(self):
+        return self.ko_rule_violated
+
+    def set_selected_marble_coords(self, x):
+        self.selected_marble_coords = x
+
+    def setupBoard(self):
+        # Top left
+        self.board[0][0] = 'W'
+        self.board[0][1] = 'W'
+        self.board[1][0] = 'W'
+        self.board[1][1] = 'W'
+        # Top right
+        self.board[0][5] = 'B'
+        self.board[0][6] = 'B'
+        self.board[1][6] = 'B'
+        self.board[1][5] = 'B'
+        # Bottom Left
+        self.board[5][0] = 'B'
+        self.board[5][1] = 'B'
+        self.board[6][0] = 'B'
+        self.board[6][1] = 'B'
+        # Bottom Right
+        self.board[5][5] = 'W'
+        self.board[5][6] = 'W'
+        self.board[6][5] = 'W'
+        self.board[6][6] = 'W'
+        # Red marbles
+        self.board[1][3] = 'R'
+        self.board[2][2] = 'R'
+        self.board[2][3] = 'R'
+        self.board[2][4] = 'R'
+        self.board[3][1] = 'R'
+        self.board[3][2] = 'R'
+        self.board[3][3] = 'R'
+        self.board[3][4] = 'R'
+        self.board[3][5] = 'R'
+        self.board[4][2] = 'R'
+        self.board[4][3] = 'R'
+        self.board[4][4] = 'R'
+        self.board[5][3] = 'R'
+
+    def set_turn(self, x):
+        self.current_turn = x
+
+    def set_winner(self, x):
+        self.winner = x
+
+    def get_player(self, playername):
+        if self.p1.get_name() == playername:
+            return self.p1
+
+        if self.p2.get_name() == playername:
+            return self.p2
+
+    def get_board(self):
+        return self.board
+
+    def get_current_turn(self):
+        return self.current_turn
+
+    def get_winner(self):
+        return self.winner
+
+    def get_player_captured_count(self, playername):
+        if self.p1.get_name() == playername:
+            return self.p1.get_captured_count()
+        else:
+            return self.p2.get_captured_count()
+
+    def get_marble(self, coords: tuple):
+        """Return the marble at the given position"""
+        row = coords[0]
+        col = coords[1]
+        # Determine if coords are valid
+        if 0 <= row < ROWS and 0 <= col < COLS:
+            return self.board[row][col]
+
+    def get_marble_count(self):
+        white, black, red = 0, 0, 0
+
+        for i in range(COLS):
+            for j in range(ROWS):
+                current_marble = self.board[i][j]
+                if current_marble == 'W':
+                    white += 1
+                elif current_marble == 'B':
+                    black += 1
+                elif current_marble == 'R':
+                    red += 1
+        return white, black, red
+
+    def showBoard(self):
+        for i in range(COLS):
+            print(self.board[i])
+        print()
+
+    def clearBoard(self):
+        for i in range(COLS):
+            self.board[i].clear()
+        self.board = [[' ' for _ in range(ROWS)] for _ in range(COLS)]
+        """
+        Return marble in space opposite of move direction. If no marble in space opposite,
+        returns None.
+        """
+
+    def showGame(self):
+        """Prints various details about the game."""
+        print(F'-------- Game Details --------')
+        print(f'Board Status: \nWhite: {self.white_marbles} \nBlack: {self.black_marbles} \nRed: {self.red_marbles}')
+        print(f'Winner: {self.get_winner()}')
+        print(f'Turn: {self.get_current_turn()}')
+
+        print()
+        print(F'Player 1: {self.p1.get_name()}')
+        print(F'Marble Color: {self.p1.get_marble_color()}')
+        print(f'Marble Count: {self.p1.get_marble_count()}')
+        print(F'Captured: {self.get_player_captured_count(self.p1.get_name())}')
+        print()
+        print(F'Player 2: {self.p2.get_name()}')
+        print(F'Marble Color: {self.p2.get_marble_color()}')
+        print(f'Marble Count: {self.p2.get_marble_count()}')
+        print(F'Captured: {self.get_player_captured_count(self.p2.get_name())}')
+        print('------------------------------')
