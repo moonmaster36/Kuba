@@ -23,6 +23,6 @@ python KubaGame/main_game.py
 
 - [pygame](https://www.pygame.org/news) must be installed.
 
-```bash
+```
 pip install pygame
 ```
