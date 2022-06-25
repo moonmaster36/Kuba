@@ -42,8 +42,6 @@ def calculate_direction(marble_coords, move_coords):
         out = 'R'
     elif col2 == col1 - 2 or col2 == col1 - 1:
         out = 'L'
-    print(f'direction = {out}')
-    print()
     return out
 
 
@@ -75,20 +73,17 @@ class Kuba:
             successful_move = self.board.make_move(current_player.get_name(),
                                           (self.selected_marble_coords[0], self.selected_marble_coords[1]), direction)
             ko_rule_violated = self.board.get_ko_rule_violated()
-            print(F'ko_rule_violated: {ko_rule_violated}')
             if not successful_move and ko_rule_violated:
                 self.selected_marble_coords = None
                 self.board.set_selected_marble_coords(None)
                 self.selected_move_coords = None
                 self.select(row, col, win)
-                self.board.print_board()
                 return True
             else:
                 # Clear after successful move
                 self.selected_marble_coords = None
                 self.board.set_selected_marble_coords(None)
                 self.selected_move_coords = None
-                self.board.print_board()
                 return False
 
         elif marble != " ":
