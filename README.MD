@@ -21,7 +21,7 @@ $ python KubaGame/main_game.py
 
 ### Prerequisites
 
-- [pygame](https://www.pygame.org/news) must be installed.
+[pygame](https://www.pygame.org/news) must be installed.
 To install pygame with pip, in your terminal, run:
 ```bash
 $ pip install pygame
