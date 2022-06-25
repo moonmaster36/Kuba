@@ -1,1 +1,1 @@
-![Starting Board](/assets/kuba_gameplay.gif)
+![Starting Board](/assets/gameplay.gif)
