@@ -247,8 +247,6 @@ class Board:
 
         # Scan board to determine if opponent has any remaining moves.
 
-        print(F'{current_player} successfully moved {coords} {direction}')
-        print()
         self.current_turn = opponent_player.get_name()
 
         # Reset marble position
@@ -309,7 +307,7 @@ class Board:
 
         # Check if marble has space to move (i.e., that marble is not in middle of marble chain.)
         if opposite_marble == 'W' or opposite_marble == 'B' or opposite_marble == 'R':
-            print(F'{candidate_player} attempted to push marble in chain: {coords} {direction}')
+            print(F'{candidate_player} tried to push marble without space at {coords} in direction {direction}')
             return False
 
         return True
