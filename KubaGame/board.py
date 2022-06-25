@@ -27,39 +27,45 @@ class Board:
         self.selected_marble_coords = x
 
     def find_starting_player(self):
-        # White always starts the game.
+        """Note: white always starts the game"""
         if self.p1.get_marble_color() == 'W':
             return self.p1.get_name()
         else:
             return self.p2.get_name()
 
-    def draw(self, win):
-        self.draw_squares(win)
-        self.draw_dots(win)
-        self.draw_marbles(win)
+    def draw(self, window):
+        """
+        - Use pygame to draw the marbles on the game board
+        - Used by Kuba in update_draw_window()
+        :param window: pygame display
+        :return: None
+        """
+        self.draw_grey_squares(window)
+        self.draw_black_dots(window)
+        self.draw_marbles(window)
         if self.selected_marble_coords:
-            # Highlight the selected marble.
+            # Highlight the selected marble with blue dot.
             row = self.selected_marble_coords[0]
             col = self.selected_marble_coords[1]
             x = SQUARE_SIZE * col + SQUARE_SIZE // 2
             y = SQUARE_SIZE * row + SQUARE_SIZE // 2
             radius = SQUARE_SIZE // 5 - self.PADDING
-            pygame.draw.circle(win, BLUE, (x, y), radius)
+            pygame.draw.circle(window, BLUE, (x, y), radius)
 
-    def draw_squares(self, win):
-        win.fill(BLACK)
+    def draw_grey_squares(self, window):
+        window.fill(BLACK)
         for row in range(ROWS):
             for col in range(COLS):
-                pygame.draw.rect(win, GREY, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+                pygame.draw.rect(window, GREY, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
-    def draw_dots(self, win):
+    def draw_black_dots(self, window):
         radius = SQUARE_SIZE // 5 - self.PADDING
         for row in range(ROWS):
             for col in range(COLS):
                 x = SQUARE_SIZE * col + SQUARE_SIZE // 2
                 y = SQUARE_SIZE * row + SQUARE_SIZE // 2
-                pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
-                pygame.draw.circle(win, BLACK, (x, y), radius)
+                pygame.draw.circle(window, GREY, (x, y), radius + self.OUTLINE)
+                pygame.draw.circle(window, BLACK, (x, y), radius)
 
     def draw_marbles(self, win):
         radius = SQUARE_SIZE // 2 - self.PADDING
@@ -142,9 +148,14 @@ class Board:
 
     def set_winner(self, x):
         self.winner = x
+        """Returns the player object given a player name."""
 
     def get_player(self, playername):
-        """Returns the player object given a player name."""
+        """
+        
+        :param playername:
+        :return:
+        """
         if self.p1.get_name() == playername:
             return self.p1
 

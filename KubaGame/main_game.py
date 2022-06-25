@@ -25,7 +25,7 @@ def main():
 
     while run:
         clock.tick(FPS)
-
+        
         if kuba.get_winner():
             print(f'Winner: {kuba.get_winner()}')
             run = False
