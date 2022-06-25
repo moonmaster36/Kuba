@@ -1,3 +1,4 @@
+from typing import List
 import pygame
 from KubaGame.player import Player
 from KubaGame.constants import RED, WHITE, BLACK, GREY, BLUE, SQUARE_SIZE, ROWS, COLS
@@ -20,194 +21,55 @@ class Board:
         self.ko_rule_violated = False
         self.setupBoard()
 
-    def draw(self, window):
+    def get_player(self, playername: str):
         """
-        - Use pygame to draw the marbles on the game board
-        - Used by Kuba in update_draw_window()
-        :param window: pygame display
-        :return: None
+        :return: Player object matching playername
         """
-        self.draw_grey_squares(window)
-        self.draw_black_dots(window)
-        self.draw_marbles(window)
-        if self.selected_marble_coords:
-            # Highlight the selected marble with blue dot.
-            row = self.selected_marble_coords[0]
-            col = self.selected_marble_coords[1]
-            x = SQUARE_SIZE * col + SQUARE_SIZE // 2
-            y = SQUARE_SIZE * row + SQUARE_SIZE // 2
-            radius = SQUARE_SIZE // 5 - self.PADDING
-            pygame.draw.circle(window, BLUE, (x, y), radius)
+        if self.p1.get_name() == playername:
+            return self.p1
 
-    def draw_grey_squares(self, window):
-        window.fill(BLACK)
-        for row in range(ROWS):
-            for col in range(COLS):
-                pygame.draw.rect(window, GREY, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+        if self.p2.get_name() == playername:
+            return self.p2
 
-    def draw_black_dots(self, window):
-        radius = SQUARE_SIZE // 5 - self.PADDING
-        for row in range(ROWS):
-            for col in range(COLS):
-                x = SQUARE_SIZE * col + SQUARE_SIZE // 2
-                y = SQUARE_SIZE * row + SQUARE_SIZE // 2
-                pygame.draw.circle(window, GREY, (x, y), radius + self.OUTLINE)
-                pygame.draw.circle(window, BLACK, (x, y), radius)
+    def get_board(self):
+        return self.board
 
-    def draw_marbles(self, win):
-        radius = SQUARE_SIZE // 2 - self.PADDING
-        for row in range(ROWS):
-            for col in range(COLS):
-                if self.board[row][col] != ' ':
-                    x = SQUARE_SIZE * col + SQUARE_SIZE // 2
-                    y = SQUARE_SIZE * row + SQUARE_SIZE // 2
-                    if self.board[row][col] == 'W':
-                        pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
-                        pygame.draw.circle(win, WHITE, (x, y), radius)
-                    elif self.board[row][col] == 'B':
-                        pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
-                        pygame.draw.circle(win, BLACK, (x, y), radius)
-                    elif self.board[row][col] == 'R':
-                        pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
-                        pygame.draw.circle(win, RED, (x, y), radius)
+    def get_current_turn(self):
+        return self.current_turn
 
-    def get_opposite_marble(self, coords: tuple, direction: str):
-        """
-        - Used in validate_move to check the space opposite of the desired move direction
-        - Returns marble in space opposite of direction.
-        - If no marble in space opposite, returns None.
-        :param coords: marble location
-        :param direction: direction of desired move
-        :return:
-        """
-        row = coords[0]
-        col = coords[1]
-        candidate_coords = None
-        # Check if marble exists in opposite location of direction of move.
-        if direction == 'B':  # Check forward space.
-            candidate_coords = (row - 1, col)
-        if direction == 'R':  # Check left space.
-            candidate_coords = (row, col - 1)
-        if direction == 'F':  # Check backward space.
-            candidate_coords = (row + 1, col)
-        if direction == 'L':  # Check right space
-            candidate_coords = (row, col + 1)
+    def get_player_captured_count(self, playername):
+        if self.p1.get_name() == playername:
+            return self.p1.get_captured_count()
+        else:
+            return self.p2.get_captured_count()
 
-        opposite_marble = self.get_marble(candidate_coords)
-        return opposite_marble
+    def get_marble_count(self):
+        white, black, red = 0, 0, 0
+        for i in range(COLS):
+            for j in range(ROWS):
+                current_marble = self.board[i][j]
+                if current_marble == 'W':
+                    white += 1
+                elif current_marble == 'B':
+                    black += 1
+                elif current_marble == 'R':
+                    red += 1
+        return white, black, red
 
-    def check_for_winner(self, current_player, opponent_player) -> bool:
-        """
-        Immediately after a move has been made, determines if the player that made the
-            move has won the game.
-        :param current_player: player that just made a move.
-        :param opponent_player: opponent of current_player
-        :return: True if the player has won
-        :return: False if the player has not won
-        """
-        pass
+    def get_winner(self):
+        return self.winner
 
-    def validate_move(self, playername: str, coords: tuple, direction: str) -> bool:
-        """
-        -Validates a move
-        -NOTE: Player attempting to push own marble off is tested in move_right.
-        :param playername: player pushing marble
-        :param coords: tuple containing the marble location
-        :param direction: direction to push marble in
-        :return:
-        """
-        # Check if game has already been won
-        if self.get_winner():
-            print(F'{self.winner} already won!')
-            return False
+    def get_ko_rule_violated(self):
+        return self.ko_rule_violated
 
-        # Check if it is playername's turn
-        if self.get_current_turn() and self.get_current_turn() != playername:
-            print(F"It is not {playername}'s turn!")
-            return False
+    def set_selected_marble_coords(self, x):
+        self.selected_marble_coords = x
 
-        # Check if row is valid.
-        if coords[0] < 0 or coords[0] >= ROWS:
-            print(f'Invalid coordinates! coords: ({coords[0]}, {coords[1]})')
-            return False
+    def set_turn(self, x):
+        self.current_turn = x
 
-        # Check if column is valid.
-        if coords[1] < 0 or coords[1] >= COLS:
-            print(f'Invalid coordinates! coords: ({coords[0]}, {coords[1]})')
-            return False
-
-        # Verify that the player is allowed to move the chosen marble.
-        candidate_marble = self.get_marble(coords)
-        candidate_player = self.get_player(playername)
-
-        if candidate_marble == ' ':
-            print(f"No marble present at that space! coords: ({coords[0]}, {coords[1]})")
-            return False
-
-        if candidate_marble == 'R':
-            print(f"You cannot move Red marbles! coords: ({coords[0]}, {coords[1]})")
-            return False
-
-        if candidate_marble != candidate_player.get_marble_color():  # This also tests if marble is out of bounds.
-            print(F"You cannot move your opponent's marble! coords: ({coords[0]}, {coords[1]})")
-            return False
-
-        # Check for space to push.
-        opposite_marble = self.get_opposite_marble(coords, direction)
-
-        # Check if marble has space to move (i.e., that marble is not in middle of marble chain.)
-        if opposite_marble == 'W' or opposite_marble == 'B' or opposite_marble == 'R':
-            print(F'{candidate_player} attempted to push marble in chain: {coords} {direction}')
-            return False
-
-        return True
-
-    def move_right(self, row_input, start, current_player):
-        """
-        - Push marbles at start in row_input to the right.
-        - Determines number of marbles affected by move,
-            then shifts the marbles over.
-        - If player attempts to push own marble off, the
-            move is abandoned and returns False
-        - Opponent marbles on edge of board are pushed off,
-            marble count is updated at end of function.
-        - Red (neutral) marbles pushed off board are captured by the current_player.
-            Captured count is updated immediately after a red marble is pushed off.
-        :param row_input: row in board to shift
-        :param start: marble being pushed
-        :param current_player: player pushing marble
-        :return: True if successful
-        :return: False if player tries to knock their own marble off.
-        """
-        # Determine number of marbles to move
-        end = start
-        while end < len(row_input) and row_input[end] != ' ':
-            end += 1
-
-        # Check to see if this will knock our own marble off
-        if end == len(row_input) and row_input[end - 1] == row_input[start]:
-            return False
-
-        # If our end is the edge, we know a marble is being pushed off.
-        if end == len(row_input):
-            end -= 1
-            # Determine if a red marble will be pushed off.
-            if row_input[end] == 'R':
-                current_player.increment_captured_count(1)
-
-        # Shift marbles over
-        # temp_row = copy.deepcopy(row_input)
-        temp_row = [x for x in row_input]
-        cur = start
-        for i in range(start + 1, end + 1):
-            temp_row[i] = row_input[cur]
-            cur += 1
-        temp_row[start] = ' '
-
-        # Copy temp_row into row_input
-        for i in range(len(temp_row)):
-            row_input[i] = temp_row[i]
-        return True
+    def set_winner(self, x):
+        self.winner = x
 
     def make_move(self, playername: str, coords: tuple, direction: str) -> bool:
         """
@@ -362,11 +224,118 @@ class Board:
         self.current_turn = 'p1'
         return True
 
-    def get_ko_rule_violated(self):
-        return self.ko_rule_violated
+    def validate_move(self, playername: str, coords: tuple, direction: str) -> bool:
+        """
+        -Validates a move
+        -NOTE: Player attempting to push own marble off is tested in move_right.
+        :param playername: player pushing marble
+        :param coords: tuple containing the marble location
+        :param direction: direction to push marble in
+        :return:
+        """
+        # Check if game has already been won
+        if self.get_winner():
+            print(F'{self.winner} already won!')
+            return False
 
-    def set_selected_marble_coords(self, x):
-        self.selected_marble_coords = x
+        # Check if it is playername's turn
+        if self.get_current_turn() and self.get_current_turn() != playername:
+            print(F"It is not {playername}'s turn!")
+            return False
+
+        # Check if row is valid.
+        if coords[0] < 0 or coords[0] >= ROWS:
+            print(f'Invalid coordinates! coords: ({coords[0]}, {coords[1]})')
+            return False
+
+        # Check if column is valid.
+        if coords[1] < 0 or coords[1] >= COLS:
+            print(f'Invalid coordinates! coords: ({coords[0]}, {coords[1]})')
+            return False
+
+        # Verify that the player is allowed to move the chosen marble.
+        candidate_marble = self.get_marble(coords)
+        candidate_player = self.get_player(playername)
+
+        if candidate_marble == ' ':
+            print(f"No marble present at that space! coords: ({coords[0]}, {coords[1]})")
+            return False
+
+        if candidate_marble == 'R':
+            print(f"You cannot move Red marbles! coords: ({coords[0]}, {coords[1]})")
+            return False
+
+        if candidate_marble != candidate_player.get_marble_color():  # This also tests if marble is out of bounds.
+            print(F"You cannot move your opponent's marble! coords: ({coords[0]}, {coords[1]})")
+            return False
+
+        # Check for space to push.
+        opposite_marble = self.get_opposite_marble(coords, direction)
+
+        # Check if marble has space to move (i.e., that marble is not in middle of marble chain.)
+        if opposite_marble == 'W' or opposite_marble == 'B' or opposite_marble == 'R':
+            print(F'{candidate_player} attempted to push marble in chain: {coords} {direction}')
+            return False
+
+        return True
+
+    def move_right(self, row_input: List, start: int, current_player: object):
+        """
+        - Push marbles at start in row_input to the right.
+        - Determines number of marbles affected by move,
+            then shifts the marbles over.
+        - If player attempts to push own marble off, the
+            move is abandoned and returns False
+        - Opponent marbles on edge of board are pushed off,
+            marble count is updated at end of function.
+        - Red (neutral) marbles pushed off board are captured by the current_player.
+            Captured count is updated immediately after a red marble is pushed off.
+        :param row_input: row in board to shift
+        :param start: marble being pushed
+        :param current_player: player pushing marble
+        :return: True if successful
+        :return: False if player tries to knock their own marble off.
+        """
+        # Determine number of marbles to move
+        end = start
+        while end < len(row_input) and row_input[end] != ' ':
+            end += 1
+
+        # Check to see if this will knock our own marble off
+        if end == len(row_input) and row_input[end - 1] == row_input[start]:
+            return False
+
+        # If our end is the edge, we know a marble is being pushed off.
+        if end == len(row_input):
+            end -= 1
+            # Determine if a red marble will be pushed off.
+            if row_input[end] == 'R':
+                current_player.increment_captured_count(1)
+
+        # Shift marbles over
+        # temp_row = copy.deepcopy(row_input)
+        temp_row = [x for x in row_input]
+        cur = start
+        for i in range(start + 1, end + 1):
+            temp_row[i] = row_input[cur]
+            cur += 1
+        temp_row[start] = ' '
+
+        # Copy temp_row into row_input
+        for i in range(len(temp_row)):
+            row_input[i] = temp_row[i]
+        return True
+
+    def check_for_winner(self, current_player, opponent_player) -> bool:
+        """
+        Immediately after a move has been made, determines if the player that made the
+            move has won the game.
+        :param current_player: player that just made a move.
+        :param opponent_player: opponent of current_player
+        :return: True if the player has won
+        :return: False if the player has not won
+        """
+        pass
 
     def setupBoard(self):
         # Top left
@@ -404,57 +373,7 @@ class Board:
         self.board[4][4] = 'R'
         self.board[5][3] = 'R'
 
-    def set_turn(self, x):
-        self.current_turn = x
-
-    def set_winner(self, x):
-        self.winner = x
-
-    def get_player(self, playername):
-        if self.p1.get_name() == playername:
-            return self.p1
-
-        if self.p2.get_name() == playername:
-            return self.p2
-
-    def get_board(self):
-        return self.board
-
-    def get_current_turn(self):
-        return self.current_turn
-
-    def get_winner(self):
-        return self.winner
-
-    def get_player_captured_count(self, playername):
-        if self.p1.get_name() == playername:
-            return self.p1.get_captured_count()
-        else:
-            return self.p2.get_captured_count()
-
-    def get_marble(self, coords: tuple):
-        """Return the marble at the given position"""
-        row = coords[0]
-        col = coords[1]
-        # Determine if coords are valid
-        if 0 <= row < ROWS and 0 <= col < COLS:
-            return self.board[row][col]
-
-    def get_marble_count(self):
-        white, black, red = 0, 0, 0
-
-        for i in range(COLS):
-            for j in range(ROWS):
-                current_marble = self.board[i][j]
-                if current_marble == 'W':
-                    white += 1
-                elif current_marble == 'B':
-                    black += 1
-                elif current_marble == 'R':
-                    red += 1
-        return white, black, red
-
-    def showBoard(self):
+    def print_board(self):
         for i in range(COLS):
             print(self.board[i])
         print()
@@ -463,10 +382,6 @@ class Board:
         for i in range(COLS):
             self.board[i].clear()
         self.board = [[' ' for _ in range(ROWS)] for _ in range(COLS)]
-        """
-        Return marble in space opposite of move direction. If no marble in space opposite,
-        returns None.
-        """
 
     def showGame(self):
         """Prints various details about the game."""
@@ -486,3 +401,54 @@ class Board:
         print(f'Marble Count: {self.p2.get_marble_count()}')
         print(F'Captured: {self.get_player_captured_count(self.p2.get_name())}')
         print('------------------------------')
+
+    def draw(self, window):
+        """
+        - Use pygame to draw the marbles on the game board
+        - Used by Kuba in update_draw_window()
+        :param window: pygame display
+        :return: None
+        """
+        self.draw_grey_squares(window)
+        self.draw_black_dots(window)
+        self.draw_marbles(window)
+        if self.selected_marble_coords:
+            # Highlight the selected marble with blue dot.
+            row = self.selected_marble_coords[0]
+            col = self.selected_marble_coords[1]
+            x = SQUARE_SIZE * col + SQUARE_SIZE // 2
+            y = SQUARE_SIZE * row + SQUARE_SIZE // 2
+            radius = SQUARE_SIZE // 5 - self.PADDING
+            pygame.draw.circle(window, BLUE, (x, y), radius)
+
+    def draw_grey_squares(self, window):
+        window.fill(BLACK)
+        for row in range(ROWS):
+            for col in range(COLS):
+                pygame.draw.rect(window, GREY, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+
+    def draw_black_dots(self, window):
+        radius = SQUARE_SIZE // 5 - self.PADDING
+        for row in range(ROWS):
+            for col in range(COLS):
+                x = SQUARE_SIZE * col + SQUARE_SIZE // 2
+                y = SQUARE_SIZE * row + SQUARE_SIZE // 2
+                pygame.draw.circle(window, GREY, (x, y), radius + self.OUTLINE)
+                pygame.draw.circle(window, BLACK, (x, y), radius)
+
+    def draw_marbles(self, win):
+        radius = SQUARE_SIZE // 2 - self.PADDING
+        for row in range(ROWS):
+            for col in range(COLS):
+                if self.board[row][col] != ' ':
+                    x = SQUARE_SIZE * col + SQUARE_SIZE // 2
+                    y = SQUARE_SIZE * row + SQUARE_SIZE // 2
+                    if self.board[row][col] == 'W':
+                        pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
+                        pygame.draw.circle(win, WHITE, (x, y), radius)
+                    elif self.board[row][col] == 'B':
+                        pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
+                        pygame.draw.circle(win, BLACK, (x, y), radius)
+                    elif self.board[row][col] == 'R':
+                        pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
+                        pygame.draw.circle(win, RED, (x, y), radius)

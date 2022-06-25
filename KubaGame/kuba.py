@@ -81,14 +81,14 @@ class Kuba:
                 self.board.set_selected_marble_coords(None)
                 self.selected_move_coords = None
                 self.select(row, col, win)
-                self.board.showBoard()
+                self.board.print_board()
                 return True
             else:
                 # Clear after successful move
                 self.selected_marble_coords = None
                 self.board.set_selected_marble_coords(None)
                 self.selected_move_coords = None
-                self.board.showBoard()
+                self.board.print_board()
                 return False
 
         elif marble != " ":
