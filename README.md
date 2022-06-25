@@ -1,1 +1,1 @@
-![alt text](https://github.com/[moonmaster36]/[kuba-master]/asssets/starting_board.png?raw=true)
+![Starting Board](/assets/starting_board.png)
