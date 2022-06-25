@@ -1,7 +1,7 @@
 from typing import List
 import pygame
-from KubaGame.player import Player
-from KubaGame.constants import RED, WHITE, BLACK, GREY, BLUE, SQUARE_SIZE, ROWS, COLS
+from player import Player
+from constants import RED, WHITE, BLACK, GREY, BLUE, SQUARE_SIZE, ROWS, COLS
 
 
 class Board:

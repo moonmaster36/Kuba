@@ -1,6 +1,6 @@
 import pygame
-from KubaGame.player import Player
-from KubaGame.board import Board
+from player import Player
+from board import Board
 
 
 def get_p1_from_user():
