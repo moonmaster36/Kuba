@@ -1,7 +1,6 @@
-# Assets: https://techwithtim.net/wp-content/uploads/2020/09/assets.zip
 import pygame
 from KubaGame.kuba import Kuba
-from KubaGame.constants import RED, WHITE, BLACK, BLUE, GREY, SQUARE_SIZE, ROWS, COLS, WIDTH, HEIGHT
+from KubaGame.constants import SQUARE_SIZE, WIDTH, HEIGHT
 
 FPS = 60
 
@@ -25,7 +24,7 @@ def main():
 
     while run:
         clock.tick(FPS)
-        
+
         if kuba.get_winner():
             print(f'Winner: {kuba.get_winner()}')
             run = False

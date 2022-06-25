@@ -1,5 +1,4 @@
 import pygame
-from KubaGame.constants import RED, WHITE, BLACK, BLUE, GREY, SQUARE_SIZE, ROWS, COLS
 from KubaGame.player import Player
 from KubaGame.board import Board
 
@@ -25,14 +24,6 @@ def calculate_direction(marble_coords, move_coords):
     col1 = marble_coords[1]
     row2 = move_coords[0]
     col2 = move_coords[1]
-
-    row_movement = row1 - row2
-    col_movement = col1 - col2
-    # print(F'row1: {row1} row2 {row2}')
-    # print(F'col1: {col1} col2 {col2}')
-    # print(f'row_movement: {row_movement} col_movement: {col_movement}')
-    # print(f'row1 + 2 = {row1 + 2}')
-    # print(f'res = ({row_movement}, {col_movement})')
     out = None
     if row2 == row1 + 2 or row2 == row1 + 1:
         out = 'B'
@@ -50,7 +41,6 @@ class Kuba:
     OUTLINE = 2
 
     def __init__(self, kuba_window):
-        # self._init()
         self.kuba_window = kuba_window
         self.board = Board(("p1", "W"), ("p2", "B"))
         self.selected_move_coords = None
@@ -71,7 +61,8 @@ class Kuba:
             direction = calculate_direction(self.selected_marble_coords, self.selected_move_coords)
 
             successful_move = self.board.make_move(current_player.get_name(),
-                                          (self.selected_marble_coords[0], self.selected_marble_coords[1]), direction)
+                                                   (self.selected_marble_coords[0], self.selected_marble_coords[1]),
+                                                   direction)
             ko_rule_violated = self.board.get_ko_rule_violated()
             if not successful_move and ko_rule_violated:
                 self.selected_marble_coords = None
