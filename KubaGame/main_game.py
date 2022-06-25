@@ -7,10 +7,8 @@ if __name__ == '__main__':
 
     KUBA_WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption('Kuba')
-    # programIcon = pygame.image.load('../assets/marbles.png')
-    # pygame.display.set_icon(programIcon)
 
-
+    
     def get_row_col_from_mouse(pos):
         x, y = pos
         row = y // SQUARE_SIZE
