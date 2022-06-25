@@ -12,17 +12,17 @@ Push your marbles to shove red scoring marbles (or your opponent's!) off the gri
 
 ## Intstallation
 
-1. Extract the files to a local directory. 
-2. At a command prompt, run:
+1. Extract the files to a local directory. Open a terminal and navigate to the folder you just extracted. 
+2. In your terminal, run:
 
 ```bash
-python KubaGame/main_game.py
+$ python KubaGame/main_game.py
 ```
 
 ### Prerequisites
 
 - [pygame](https://www.pygame.org/news) must be installed.
-
-```
-pip install pygame
+To install pygame with pip, in your terminal, run:
+```bash
+$ pip install pygame
 ```
