@@ -246,7 +246,7 @@ class Board:
         -Validates a move
         -NOTE: Player attempting to push own marble off is tested in move_right.
         :param playername: player pushing marble
-        :param coords: location of marble to push
+        :param coords: tuple containing the marble location
         :param direction: direction to push marble in
         :return:
         """
@@ -345,17 +345,27 @@ class Board:
 
     def make_move(self, playername: str, coords: tuple, direction: str) -> bool:
         """
-
-        :param playername: name of player making the move
-        :param coords: location of the marble to be moved
-        :param direction: direction the marble is moving
-        :return:
+        ****See game_instructions.pdf for more information about marble movement****
+        - Moves the marble at the provided coordinates in the desired direction.
+        - Valid directions are L (Left), R (Right), F (Forward), and B (Backward)
+        - If any opponent marble is pushed off it is removed from the board.
+        - If a Red marble is pushed off it is considered captured by the player who made the move.
+        - Invalid Moves:
+            * Move is being made after the game is won.
+            * It is not the player's turn.
+            * Invalid coordinates.
+            * Marble at provided coordinates cannot be moved in the specified direction.
+            * Marble at provided coordinates is not the player's marble.
+            * Move violates Ko Rule (see game_instructions.pdf).
+        :param playername: name of player making the move.
+        :param coords: tuple containing the location of marble that is being moved.
+        :param direction: direction in which the player wants to push the marble.
+        :return: True if move is successful.
+        :return: False if move is invalid.
         """
         if not playername or not coords or not direction:
             return False
         current_player = self.get_player(playername)
-        print(
-            F'{current_player} attempts to move {coords} {direction}')
 
         # Before doing anything, check if the marble is allowed to be moved.
         valid = self.validate_move(playername, coords, direction)
@@ -366,8 +376,8 @@ class Board:
             row_number = coords[0]
             successful_right_move = self.move_right(self.board[row_number], coords[1], current_player)
             if not successful_right_move:
-                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 # Return false if player tried to push their own marble off.
+                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 return False
 
         elif direction == 'L':
@@ -379,8 +389,8 @@ class Board:
 
             successful_left_move = self.move_right(row_copy, COLS - 1 - start, current_player)
             if not successful_left_move:
-                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 # Return false if player tried to push their own marble off.
+                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 return False
 
             # Reverse and transfer updated row onto game board.
@@ -391,15 +401,15 @@ class Board:
         elif direction == 'B':
             # Backward movement is accomplished by copying the column then feeding the column into movement_right
             col_number = coords[1]
-            # Iterate and copy column
+            # Iterate over rows to copy column contents
             column_to_modify = []
             for i in range(ROWS):
                 column_to_modify.append(self.board[i][col_number])
 
             successful_backward_move = self.move_right(column_to_modify, coords[0], current_player)
             if not successful_backward_move:
-                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 # Return false if player tried to push their own marble off.
+                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 return False
 
             # Transfer list modified by move_right onto game board.
@@ -409,7 +419,7 @@ class Board:
         elif direction == 'F':
             # Backward movement is accomplished by copying the column then feeding the column into movement_right
             col_number = coords[1]
-            # Iterate and copy column
+            # Iterate over rows to copy column contents
             column_to_modify = []
             for i in range(ROWS):
                 column_to_modify.append(self.board[i][col_number])
@@ -420,8 +430,8 @@ class Board:
             successful_forward_move = self.move_right(column_to_modify, (COLS - 1) - coords[0],
                                                       current_player)
             if not successful_forward_move:
-                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 # Return false if player tried to push their own marble off.
+                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 return False
 
             # Reverse then transfer modified column onto game board.
@@ -443,7 +453,6 @@ class Board:
             self.p2.set_marble_count(self.white_marbles)
 
         # Determine who the opponent player is.
-        # Determine who the opponent player is.
         opponent_player = None
         if self.p1.get_name() == current_player.get_name():
             opponent_player = self.p2
@@ -453,7 +462,6 @@ class Board:
         # Ko Rule enforcement
         if self.board == opponent_player.get_board_state_after_move():
             # Restore game board to previous state
-            # self.board = opponent_player.get_board_state_after_move()
             current_player_copy = [list(x) for x in current_player.get_board_state_after_move()]
             self.board = current_player_copy
             restored_marble_count = self.get_marble_count()
@@ -479,30 +487,11 @@ class Board:
         print(F'{current_player} successfully moved {coords} {direction}')
         print()
         self.current_turn = opponent_player.get_name()
+
         # Reset marble position
         self.selected_marble_coords = None
         self.ko_rule_violated = False
+
         # TEMPORARY
         self.current_turn = 'p1'
         return True
-
-
-if __name__ == '__main__':
-    game = Board(('p1', 'W'), ('p2', 'B'))
-    p1 = game.get_player('p1')
-    p2 = game.get_player('p2')
-    game.setupBoard()
-
-    game.make_move('p1', (0, 1), 'B')
-    game.set_turn('p1')
-    game.showBoard()
-    game.make_move('p1', (1, 1), 'B')
-    game.set_turn('p1')
-    game.showBoard()
-
-    game.make_move('p1', (6, 5), 'F')
-    game.set_turn('p1')
-    game.showBoard()
-    game.make_move('p1', (5, 5), 'F')
-    game.set_turn('p1')
-    game.showBoard()
