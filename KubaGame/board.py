@@ -25,10 +25,10 @@ class Board:
         """Return Player object matching playername"""
         return self.p1 if playername == self.p1.get_name() else self.p2
 
-    def get_board(self):
+    def get_board(self) -> List[List[str]]:
         return self.board
 
-    def get_current_turn(self):
+    def get_current_turn(self) -> str:
         return self.current_turn
 
     def set_current_turn(self, x):
@@ -37,11 +37,11 @@ class Board:
     def get_ko_rule_violated(self):
         return self.ko_rule_violated
 
-    def get_winner(self):
+    def get_winner(self) -> str:
         return self.winner
 
-    def set_winner(self, x):
-        self.winner = x
+    def set_winner(self, playername: str):
+        self.winner = playername
 
     def check_for_winner(self, current_player, opponent_player) -> bool:
         """
@@ -57,7 +57,7 @@ class Board:
     def set_selected_marble_coords(self, x):
         self.selected_marble_coords = x
 
-    def get_marble_count(self):
+    def get_marble_count(self) -> tuple:
         white, black, red = 0, 0, 0
         for i in range(COLS):
             for j in range(ROWS):
@@ -70,7 +70,7 @@ class Board:
                     red += 1
         return white, black, red
 
-    def get_marble(self, coords: tuple):
+    def get_marble(self, coords: tuple) -> chr:
         """Return the marble at the given position"""
         row = coords[0]
         col = coords[1]
@@ -78,7 +78,7 @@ class Board:
         if 0 <= row < ROWS and 0 <= col < COLS:
             return self.board[row][col]
 
-    def get_opposite_marble(self, coords: tuple, direction: str):
+    def get_opposite_marble(self, coords: tuple, direction: str) -> chr:
         """
         - Used in validate_move to check the space opposite of the desired move direction
         - Returns marble in space opposite of direction.
@@ -312,7 +312,7 @@ class Board:
 
         return True
 
-    def move_right(self, row_input: List, start: int, current_player: object):
+    def move_right(self, row_input: List[chr], start: int, current_player: object) -> bool:
         """
         - Push marbles at start in row_input to the right.
         - Determines number of marbles affected by move,
@@ -359,7 +359,7 @@ class Board:
             row_input[i] = temp_row[i]
         return True
 
-    def setupBoard(self):
+    def setupBoard(self) -> None:
         # Top left
         self.board[0][0] = 'W'
         self.board[0][1] = 'W'
@@ -395,36 +395,7 @@ class Board:
         self.board[4][4] = 'R'
         self.board[5][3] = 'R'
 
-    def print_board(self):
-        for i in range(COLS):
-            print(self.board[i])
-        print()
-
-    def clearBoard(self):
-        for i in range(COLS):
-            self.board[i].clear()
-        self.board = [[' ' for _ in range(ROWS)] for _ in range(COLS)]
-
-    def showGame(self):
-        """Prints various details about the game."""
-        print(F'-------- Game Details --------')
-        print(f'Board Status: \nWhite: {self.white_marbles} \nBlack: {self.black_marbles} \nRed: {self.red_marbles}')
-        print(f'Winner: {self.get_winner()}')
-        print(f'Turn: {self.get_current_turn()}')
-
-        print()
-        print(F'Player 1: {self.p1.get_name()}')
-        print(F'Marble Color: {self.p1.get_marble_color()}')
-        print(f'Marble Count: {self.p1.get_marble_count()}')
-        print(F'Captured: {self.p1.get_captured_count()}')
-        print()
-        print(F'Player 2: {self.p2.get_name()}')
-        print(F'Marble Color: {self.p2.get_marble_color()}')
-        print(f'Marble Count: {self.p2.get_marble_count()}')
-        print(F'Captured: {self.p2.get_captured_count()}')
-        print('------------------------------')
-
-    def draw(self, window):
+    def draw(self, window) -> None:
         """
         - Use pygame to draw the marbles on the game board
         - Used by Kuba in update_draw_window()
@@ -443,13 +414,13 @@ class Board:
             radius = SQUARE_SIZE // 5 - self.PADDING
             pygame.draw.circle(window, BLUE, (x, y), radius)
 
-    def draw_grey_squares(self, window):
+    def draw_grey_squares(self, window) -> None:
         window.fill(BLACK)
         for row in range(ROWS):
             for col in range(COLS):
                 pygame.draw.rect(window, GREY, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
-    def draw_black_dots(self, window):
+    def draw_black_dots(self, window) -> None:
         radius = SQUARE_SIZE // 5 - self.PADDING
         for row in range(ROWS):
             for col in range(COLS):
@@ -458,7 +429,7 @@ class Board:
                 pygame.draw.circle(window, GREY, (x, y), radius + self.OUTLINE)
                 pygame.draw.circle(window, BLACK, (x, y), radius)
 
-    def draw_marbles(self, win):
+    def draw_marbles(self, win) -> None:
         radius = SQUARE_SIZE // 2 - self.PADDING
         for row in range(ROWS):
             for col in range(COLS):
@@ -474,3 +445,32 @@ class Board:
                     elif self.board[row][col] == 'R':
                         pygame.draw.circle(win, GREY, (x, y), radius + self.OUTLINE)
                         pygame.draw.circle(win, RED, (x, y), radius)
+
+    def print_board(self) -> None:
+        for i in range(COLS):
+            print(self.board[i])
+        print()
+
+    def clearBoard(self) -> None:
+        for i in range(COLS):
+            self.board[i].clear()
+        self.board = [[' ' for _ in range(ROWS)] for _ in range(COLS)]
+
+    def showGame(self) -> None:
+        """Prints various details about the game."""
+        print(F'-------- Game Details --------')
+        print(f'Board Status: \nWhite: {self.white_marbles} \nBlack: {self.black_marbles} \nRed: {self.red_marbles}')
+        print(f'Winner: {self.get_winner()}')
+        print(f'Turn: {self.get_current_turn()}')
+
+        print()
+        print(F'Player 1: {self.p1.get_name()}')
+        print(F'Marble Color: {self.p1.get_marble_color()}')
+        print(f'Marble Count: {self.p1.get_marble_count()}')
+        print(F'Captured: {self.p1.get_captured_count()}')
+        print()
+        print(F'Player 2: {self.p2.get_name()}')
+        print(F'Marble Color: {self.p2.get_marble_color()}')
+        print(f'Marble Count: {self.p2.get_marble_count()}')
+        print(F'Captured: {self.p2.get_captured_count()}')
+        print('------------------------------')
