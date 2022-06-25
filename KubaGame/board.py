@@ -140,7 +140,6 @@ class Board:
             successful_right_move = self.move_right(self.board[row_number], coords[1], current_player)
             if not successful_right_move:
                 # Return false if player tried to push their own marble off.
-                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 return False
 
         elif direction == 'L':
@@ -153,7 +152,6 @@ class Board:
             successful_left_move = self.move_right(row_copy, COLS - 1 - start, current_player)
             if not successful_left_move:
                 # Return false if player tried to push their own marble off.
-                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 return False
 
             # Reverse and transfer updated row onto game board.
@@ -172,7 +170,6 @@ class Board:
             successful_backward_move = self.move_right(column_to_modify, coords[0], current_player)
             if not successful_backward_move:
                 # Return false if player tried to push their own marble off.
-                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 return False
 
             # Transfer list modified by move_right onto game board.
@@ -194,7 +191,6 @@ class Board:
                                                       current_player)
             if not successful_forward_move:
                 # Return false if player tried to push their own marble off.
-                print(f'Invalid {direction} move by {current_player.get_name()} at {direction} {coords}')
                 return False
 
             # Reverse then transfer modified column onto game board.
@@ -232,7 +228,6 @@ class Board:
             self.black_marbles = restored_marble_count[1]
             self.red_marbles = restored_marble_count[2]
             self.ko_rule_violated = True
-            print(F"{current_player} violated Ko Rule {coords} {direction}")
             return False
 
         # After successful move, store board state in opponent_player
@@ -264,22 +259,18 @@ class Board:
         """
         # Check if game has already been won
         if self.get_winner():
-            print(F'{self.winner} already won!')
             return False
 
         # Check if it is playername's turn
         if self.get_current_turn() and self.get_current_turn() != playername:
-            print(F"It is not {playername}'s turn!")
             return False
 
         # Check if row is valid.
         if coords[0] < 0 or coords[0] >= ROWS:
-            print(f'Invalid coordinates! coords: ({coords[0]}, {coords[1]})')
             return False
 
         # Check if column is valid.
         if coords[1] < 0 or coords[1] >= COLS:
-            print(f'Invalid coordinates! coords: ({coords[0]}, {coords[1]})')
             return False
 
         # Verify that the player is allowed to move the chosen marble.
@@ -287,15 +278,12 @@ class Board:
         candidate_player = self.get_player(playername)
 
         if candidate_marble == ' ':
-            print(f"No marble present at that space! coords: ({coords[0]}, {coords[1]})")
             return False
 
         if candidate_marble == 'R':
-            print(f"You cannot move Red marbles! coords: ({coords[0]}, {coords[1]})")
             return False
 
         if candidate_marble != candidate_player.get_marble_color():  # This also tests if marble is out of bounds.
-            print(F"You cannot move your opponent's marble! coords: ({coords[0]}, {coords[1]})")
             return False
 
         # Check for space to push.
@@ -303,7 +291,6 @@ class Board:
 
         # Check if marble has space to move (i.e., that marble is not in middle of marble chain.)
         if opposite_marble == 'W' or opposite_marble == 'B' or opposite_marble == 'R':
-            print(F'{candidate_player} tried to push marble without space at {coords} in direction {direction}')
             return False
 
         return True
