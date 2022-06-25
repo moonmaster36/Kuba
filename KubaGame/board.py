@@ -22,26 +22,14 @@ class Board:
         self.setupBoard()
 
     def get_player(self, playername: str):
-        """
-        :return: Player object matching playername
-        """
-        if self.p1.get_name() == playername:
-            return self.p1
-
-        if self.p2.get_name() == playername:
-            return self.p2
+        """Return Player object matching playername"""
+        return self.p1 if playername == self.p1.get_name() else self.p2
 
     def get_board(self):
         return self.board
 
     def get_current_turn(self):
         return self.current_turn
-
-    def get_player_captured_count(self, playername):
-        if self.p1.get_name() == playername:
-            return self.p1.get_captured_count()
-        else:
-            return self.p2.get_captured_count()
 
     def get_marble_count(self):
         white, black, red = 0, 0, 0
@@ -394,12 +382,12 @@ class Board:
         print(F'Player 1: {self.p1.get_name()}')
         print(F'Marble Color: {self.p1.get_marble_color()}')
         print(f'Marble Count: {self.p1.get_marble_count()}')
-        print(F'Captured: {self.get_player_captured_count(self.p1.get_name())}')
+        print(F'Captured: {self.p1.get_captured_count()}')
         print()
         print(F'Player 2: {self.p2.get_name()}')
         print(F'Marble Color: {self.p2.get_marble_color()}')
         print(f'Marble Count: {self.p2.get_marble_count()}')
-        print(F'Captured: {self.get_player_captured_count(self.p2.get_name())}')
+        print(F'Captured: {self.p2.get_captured_count()}')
         print('------------------------------')
 
     def draw(self, window):
